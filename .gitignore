@@ -7,6 +7,10 @@
 
 # dependencies
 node_modules
+.env
+.history
+.gitignore
+help.txt
 
 # IDEs and editors
 /.idea

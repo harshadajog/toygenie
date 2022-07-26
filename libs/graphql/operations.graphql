@@ -1,0 +1,139 @@
+query toys {
+  toys{
+    id
+    title
+    description
+    category
+    subCategory
+    image
+    listPrice
+    brand
+    ageRange
+    condition
+    location
+    referenceURL
+    published
+    author
+   
+  }
+}
+
+query publishedToys($published: Boolean!)  {
+  publishedToys(published: $published){
+    id
+    title
+    description
+    category
+    subCategory
+    image
+    listPrice
+    brand
+    ageRange
+    condition
+    location
+    referenceURL
+    published
+    author
+  }
+}
+
+query toysByAuthor($author: Float!){
+  toysByAuthor(author: $author){
+    id,
+    title,
+    description,
+    category,
+    subCategory,
+    image,
+    listPrice,
+    brand,
+    ageRange,
+    condition,
+    location,
+    referenceURL,
+    published,
+    author
+  }
+}
+
+mutation localSignup($input: CreateUserInput!){
+  localSignup(createUserInput: $input){
+ 	 user {
+      id,
+      first_name
+      last_name
+      email_address
+    }
+    access_token
+  }
+  }
+
+  mutation login($input: LoginUserInput!){
+  login(loginUserInput: $input){
+    user {
+      id,
+      first_name
+      last_name
+      email_address
+    }
+    access_token
+  }
+}
+
+mutation createToy($input: CreateToyInput!){
+  createToy(createToyInput: $input) {
+    id
+  }
+  }
+
+  mutation removeToy($id: Int!) {
+  removeToy(id: $id) {
+      id,
+    author
+  }
+}
+
+input LoginUserInput {
+  email_address: String!
+  password: String!
+}
+
+input CreateUserInput {
+  first_name: String!
+  last_name: String!
+  email_address: String!
+  password: String!
+}
+
+input CreateToyInput {
+  title: String!
+  description: String!
+  category: String!
+  subCategory: String!
+  image: String!
+  listPrice: Float!
+  brand: BrandEnum!
+  ageRange: AgeRangeEnum!
+  condition: ConditionEnum!
+  location: String!
+  referenceURL: String!
+  published: Boolean!
+  author: Float!
+}
+
+input UpdateToyInput {
+  title: String!
+  description: String!
+  category: String!
+  subCategory: String!
+  image: String!
+  listPrice: Float!
+  brand: BrandEnum!
+  ageRange: AgeRangeEnum!
+  condition: ConditionEnum!
+  location: String!
+  referenceURL: String!
+  published: Boolean!
+  author: Float
+  id: ID!
+}

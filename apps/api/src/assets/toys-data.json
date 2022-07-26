@@ -1,0 +1,18 @@
+[
+    {
+        "id":1,
+        "title":"Scoop 'n Scoot Ice Cream Walker",
+        "description":"With this vibrant walker, kids get to pretend they're spreading the delight of ice cream all around the house.",
+        "category":"Active Play",
+        "subCategory":"Baby toys",
+        "image":"https://unsplash.com/photos/qBrF1yu5Wys",
+        "listPrice": 50.95,
+        "brand": 2,
+        "ageRange": 1,
+        "condition": 3,
+        "location": "San Jose",
+        "referenceURL": "https://unsplash.com/photos/qBrF1yu5Wys",
+        "published": false,
+        "author": 1
+    }
+]

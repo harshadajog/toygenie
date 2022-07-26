@@ -1,0 +1,138 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Toy {
+  id: ID!
+  title: String!
+  description: String!
+  category: String!
+  subCategory: String!
+  image: String!
+  listPrice: Float!
+  brand: BrandEnum!
+  ageRange: AgeRangeEnum!
+  condition: ConditionEnum!
+  location: String!
+  referenceURL: String
+  published: Boolean!
+  author: Float!
+}
+
+"""TPopular brand names for toys"""
+enum BrandEnum {
+  BARBIE
+  DISNEY
+  FISHER_PRICE
+  HARRY_POTTER
+  HASBRO
+  HOT_WHEELS
+  MY_LITTLE_PONY
+  LEGO
+  LIGHTYEAR
+  MARVEL
+  MELISSA_AND_DOUG
+  PAW_PATROL
+  STAR_WARS
+}
+
+"""TPopular brand names for toys"""
+enum AgeRangeEnum {
+  NEWBORN
+  INFANT
+  TODDLER
+  PRESCHOOLER
+  MIDDLECHILDHOOD
+  YOUNGTEEN
+  TEEN
+  ADULT
+}
+
+"""Condition values for toys"""
+enum ConditionEnum {
+  NEW
+  USED_LIKE_NEW
+  USED_VERY_GOOD
+  USED_GOOD
+  USED_ACCEPTABLE
+}
+
+"""user """
+type User {
+  id: Int!
+  first_name: String!
+  last_name: String!
+  email_address: String!
+  roles: String!
+  auth_type: String!
+}
+
+type LoginResponse {
+  access_token: String!
+  user: User!
+}
+
+type Query {
+  uptime: Float!
+  toys: [Toy!]!
+  publishedToys(published: Boolean!): [Toy!]!
+  toysByAuthor(author: Float!): [Toy!]!
+  toy(id: Int!): Toy!
+  users: [User!]!
+  user(email_address: String!): User!
+}
+
+type Mutation {
+  createToy(createToyInput: CreateToyInput!): Toy!
+  updateToy(updateToyInput: UpdateToyInput!): Toy!
+  removeToy(id: Int!): Toy!
+  login(loginUserInput: LoginUserInput!): LoginResponse!
+  localSignup(createUserInput: CreateUserInput!): LoginResponse!
+}
+
+input CreateToyInput {
+  title: String!
+  description: String!
+  category: String!
+  subCategory: String!
+  image: String!
+  listPrice: Float!
+  brand: BrandEnum!
+  ageRange: AgeRangeEnum!
+  condition: ConditionEnum!
+  location: String!
+  referenceURL: String!
+  published: Boolean!
+  author: Float!
+}
+
+input UpdateToyInput {
+  title: String!
+  description: String!
+  category: String!
+  subCategory: String!
+  image: String!
+  listPrice: Float!
+  brand: BrandEnum!
+  ageRange: AgeRangeEnum!
+  condition: ConditionEnum!
+  location: String!
+  referenceURL: String!
+  published: Boolean!
+  author: Float
+  id: ID!
+}
+
+input LoginUserInput {
+  email_address: String!
+  password: String!
+}
+
+input CreateUserInput {
+  first_name: String!
+  last_name: String!
+  email_address: String!
+  password: String!
+  roles: String = "USER"
+  auth_type: String!
+}
