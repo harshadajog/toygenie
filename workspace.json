@@ -4,6 +4,8 @@
   "projects": {
     "api": "apps/api",
     "core": "libs/core",
-    "graphql": "libs/graphql"
+    "graphql-access": "libs/graphql-access",
+    "toygenie-web": "apps/toygenie-web",
+    "toygenie-web-e2e": "apps/toygenie-web-e2e"
   }
 }

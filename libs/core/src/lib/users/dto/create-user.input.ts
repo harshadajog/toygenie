@@ -18,9 +18,6 @@ export class CreateUserInput {
   @Field({ defaultValue: 'USER'})
   roles: string;
 
-  @Field()
-  auth_type: string;
-
   // @Field()
   // token: string;
 }

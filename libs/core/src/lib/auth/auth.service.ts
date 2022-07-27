@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
+import { AuthEnum } from './enums/AuthEnum';
 import  { User }  from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import {LoginUserInput} from '../login/dto/login-user-input';
@@ -47,10 +48,7 @@ export class AuthService {
     }
 
     const password = await bcrypt.hash(createUserInput.password, 10);
-    user = await this.usersService.create({
-      ...createUserInput,
-      password,
-    })
+    user = await this.usersService.create({...createUserInput, password}, AuthEnum.LOCAL)
     const payload =  {email_address: user.email_address, sub: user.id};
     return {
       access_token: this.jwtService.sign(payload),

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserInput } from './dto/create-user.input';
+import { AuthEnum } from '../auth/enums/AuthEnum';
 
 @Injectable()
 export class UsersService {
@@ -22,10 +23,11 @@ export class UsersService {
     }
   ]
 
-  create(createUserInput: CreateUserInput) {
+  create(createUserInput: CreateUserInput, authVal: AuthEnum) {
     const user = {
       ...createUserInput,
-      id: this.users.length + 1
+      id: this.users.length + 1,
+      auth_type: authVal
     };
     this.users.push(user);
 

@@ -16,7 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@toygenie/core": ["libs/core/src/index.ts"],
-      "@toygenie/graphql": ["libs/graphql/src/index.ts"]
+      "@toygenie/graphql-access": ["libs/graphql-access/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
