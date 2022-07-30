@@ -8,6 +8,10 @@ import { UpdateToyInput } from './dto/update-toy.input'
 @Injectable()
 export class ToysService {
   private toys = JSON.parse(readFileSync(__dirname + '/assets/toys-data.json', 'utf8'));
+  constructor() {
+    this.toys = JSON.parse(readFileSync(__dirname + '/assets/toys-data.json', 'utf8'));
+  }
+
   async create(createToyInput: CreateToyInput) {
     const toyId = this.toys.length + 1;
     const newToy = {
@@ -16,6 +20,8 @@ export class ToysService {
     }
     this.toys.push(newToy);
     writeFileSync(__dirname + '/assets/toys-data.json', JSON.stringify(this.toys));
+    console.log(this.toys);
+    console.log("[Toy Service]: New Toy Created: ", newToy);
     return newToy;
   }
 
@@ -24,6 +30,8 @@ export class ToysService {
   }
 
   async findAllPublished(published: boolean) {
+    console.log(this.toys);
+    console.log(this.toys.filter((toy) => {return toy.published == published}));
     return this.toys.filter((toy) => {return toy.published == published});
   }
 

@@ -1,4 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
+import {AuthEnum} from '../enums/AuthEnum';
 
 @InputType()
 export class LoginUserInput {
@@ -7,4 +8,7 @@ export class LoginUserInput {
 
     @Field()
     password: string;
+
+    @Field(type => AuthEnum)
+    auth_type: AuthEnum;
 }

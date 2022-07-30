@@ -1,17 +1,26 @@
+type Toy {
+  id: ID!
+  title: String!
+  description: String!
+  category: String!
+  listPrice: Float!
+  brand: BrandEnum!
+  ageRange: AgeRangeEnum!
+  condition: ConditionEnum!
+  published: Boolean!
+  author: Float!
+}
+
 query toys {
   toys{
     id
     title
     description
     category
-    subCategory
-    image
     listPrice
     brand
     ageRange
     condition
-    location
-    referenceURL
     published
     author
    
@@ -24,14 +33,10 @@ query publishedToys($published: Boolean!)  {
     title
     description
     category
-    subCategory
-    image
     listPrice
     brand
     ageRange
     condition
-    location
-    referenceURL
     published
     author
   }
@@ -43,14 +48,10 @@ query toysByAuthor($author: Float!){
     title,
     description,
     category,
-    subCategory,
-    image,
     listPrice,
     brand,
     ageRange,
     condition,
-    location,
-    referenceURL,
     published,
     author
   }
@@ -96,6 +97,7 @@ mutation createToy($input: CreateToyInput!){
 input LoginUserInput {
   email_address: String!
   password: String!
+  auth_type: AuthEnum!
 }
 
 input CreateUserInput {
@@ -109,15 +111,11 @@ input CreateToyInput {
   title: String!
   description: String!
   category: String!
-  subCategory: String!
-  image: String!
   listPrice: Float!
   brand: BrandEnum!
   ageRange: AgeRangeEnum!
   condition: ConditionEnum!
-  location: String!
-  referenceURL: String!
-  published: Boolean!
+  published: Boolean = true
   author: Float!
 }
 
@@ -125,15 +123,55 @@ input UpdateToyInput {
   title: String!
   description: String!
   category: String!
-  subCategory: String!
-  image: String!
   listPrice: Float!
   brand: BrandEnum!
   ageRange: AgeRangeEnum!
   condition: ConditionEnum!
-  location: String!
-  referenceURL: String!
-  published: Boolean!
-  author: Float
+  published: Boolean = true
+  author: Float!
   id: ID!
 }
+
+
+# Auth types
+enum AuthEnum {
+  LOCAL
+  GOOGLE
+}
+
+# Popular brand names for toys
+enum BrandEnum {
+  BARBIE
+  DISNEY
+  FISHER_PRICE
+  HARRY_POTTER
+  HASBRO
+  HOT_WHEELS
+  MY_LITTLE_PONY
+  LEGO
+  LIGHTYEAR
+  MARVEL
+  MELISSA_AND_DOUG
+  PAW_PATROL
+  STAR_WARS
+}
+
+# Age Ranges
+enum AgeRangeEnum {
+  NEWBORN
+  INFANT
+  TODDLER
+  PRE_SCHOOLER
+  MIDDLE_SCHOOLER
+  YOUNG_TEEN
+  TEEN
+  ADULT
+  ANY
+}
+
+# Condition values for toys
+enum ConditionEnum {
+  NEW
+  USED
+}
+

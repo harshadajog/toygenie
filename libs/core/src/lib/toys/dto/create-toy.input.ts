@@ -17,11 +17,11 @@ export class CreateToyInput {
   @Field()
   category: string;
 
-  @Field()
-  subCategory: string;
+  // @Field({nullable: true})
+  // subCategory: string;
 
-  @Field()
-  image: string;
+  // @Field({nullable: true})
+  // image: string;
 
   @Field()
   listPrice: number;
@@ -34,16 +34,17 @@ export class CreateToyInput {
 
   @Field(type => ConditionEnum)
   condition: ConditionEnum;
-  
-  @Field()
-  location: string;
 
-  @Field()
-  referenceURL: string;
+  // @Field({nullable: true})
+  // location: string;
 
-  @Field()
+  // @Field({ nullable: true })
+  // referenceURL: string;
+
+  @Field({defaultValue: true})
   published: boolean;
 
   @Field()
   author: number;
+
 }

@@ -9,9 +9,10 @@ export class ToysResolver {
   constructor(private readonly toysService: ToysService) {}
 
   @Mutation(() => Toy)
-  createToy(@Args('createToyInput') createToyInput: CreateToyInput) {
-    console.log("[TOY Resolver CREATE TOY] ");
-    return this.toysService.create(createToyInput)
+  async createToy(@Args('createToyInput') createToyInput: CreateToyInput): Promise<Toy> {
+    console.log("[TOY Resolver CREATE TOY]: ", createToyInput);
+    const toy = await this.toysService.create(createToyInput);
+    return toy;
   }
 
   @Query(() => [Toy], { name: 'toys' })

@@ -4,16 +4,17 @@ export enum AgeRangeEnum {
     NEWBORN,
     INFANT,
     TODDLER,
-    PRESCHOOLER,
-    MIDDLECHILDHOOD,
-    YOUNGTEEN,
+    PRE_SCHOOLER,
+    MIDDLE_SCHOOLER,
+    YOUNG_TEEN,
     TEEN,
-    ADULT
+    ADULT,
+    ANY
 }
 
 registerEnumType(AgeRangeEnum, {
     name: "AgeRangeEnum", // this one is mandatory
-    description: "TPopular brand names for toys", // this one is optional
+    description: "Age Ranges", // this one is optional
   });
 
 /* 

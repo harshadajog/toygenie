@@ -16,8 +16,8 @@ import AdbIcon from '@mui/icons-material/Adb';
 import IUser from '../../interfaces/IUser';
 import LoginContext from '../../context/LoginContext';
 
-const pages = [{display: 'Dashboard', name: 'dashboard'}, {display: 'My Listings', name: 'my-listings'}, { display: 'Upload Toy', name: 'create-listing'}];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = [{display: 'Dashboard', name: 'dashboard'}, {display: 'My Listings', name: 'my-listings'}, { display: 'List an Item', name: 'create-listing'}];
+const settings = ['Profile', 'History', 'Logout'];
 
 const MUIAppBar = () => {
   const loginContext = React.useContext(LoginContext);
@@ -50,15 +50,18 @@ const MUIAppBar = () => {
   };
 
   return (
+    <>
     <AppBar position="fixed">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
-          <Typography
+         
+          <Link to="dashboard">
+          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color: 'white' }} />
+          </Link>
+          {/* <Typography
             variant="h6"
             noWrap
             component="a"
-            href="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -68,9 +71,9 @@ const MUIAppBar = () => {
               color: 'inherit',
               textDecoration: 'none',
             }}
-          >
-            Toy Genie
-          </Typography>
+          > */}
+            {/* <Link style={{letterSpacing: '.3rem', fontWeight: 400, fontFamily: "Pacifico", color: "inherit", textDecoration: 'none'}} to="dashboard">Toy Genie</Link> */}
+          {/* </Typography> */}
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -173,6 +176,8 @@ const MUIAppBar = () => {
         </Toolbar>
       </Container>
     </AppBar>
+    <Toolbar />
+    </>
   );
 };
 export default MUIAppBar;

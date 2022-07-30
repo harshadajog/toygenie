@@ -12,10 +12,11 @@ export enum BrandEnum {
     MARVEL,
     MELISSA_AND_DOUG,
     PAW_PATROL,
-    STAR_WARS
+    STAR_WARS,
+    OTHER
 }
 
 registerEnumType(BrandEnum, {
     name: "BrandEnum", // this one is mandatory
-    description: "TPopular brand names for toys", // this one is optional
+    description: "Popular brand names for toys", // this one is optional
   });

@@ -15,19 +15,26 @@ export type Scalars = {
   Float: number;
 };
 
-/** TPopular brand names for toys */
+/** Age Ranges */
 export enum AgeRangeEnum {
   Adult = 'ADULT',
+  Any = 'ANY',
   Infant = 'INFANT',
-  Middlechildhood = 'MIDDLECHILDHOOD',
+  MiddleSchooler = 'MIDDLE_SCHOOLER',
   Newborn = 'NEWBORN',
-  Preschooler = 'PRESCHOOLER',
+  PreSchooler = 'PRE_SCHOOLER',
   Teen = 'TEEN',
   Toddler = 'TODDLER',
-  Youngteen = 'YOUNGTEEN'
+  YoungTeen = 'YOUNG_TEEN'
 }
 
-/** TPopular brand names for toys */
+/** Auth types */
+export enum AuthEnum {
+  Google = 'GOOGLE',
+  Local = 'LOCAL'
+}
+
+/** Popular brand names for toys */
 export enum BrandEnum {
   Barbie = 'BARBIE',
   Disney = 'DISNEY',
@@ -40,6 +47,7 @@ export enum BrandEnum {
   Marvel = 'MARVEL',
   MelissaAndDoug = 'MELISSA_AND_DOUG',
   MyLittlePony = 'MY_LITTLE_PONY',
+  Other = 'OTHER',
   PawPatrol = 'PAW_PATROL',
   StarWars = 'STAR_WARS'
 }
@@ -47,10 +55,7 @@ export enum BrandEnum {
 /** Condition values for toys */
 export enum ConditionEnum {
   New = 'NEW',
-  UsedAcceptable = 'USED_ACCEPTABLE',
-  UsedGood = 'USED_GOOD',
-  UsedLikeNew = 'USED_LIKE_NEW',
-  UsedVeryGood = 'USED_VERY_GOOD'
+  Used = 'USED'
 }
 
 export type CreateToyInput = {
@@ -60,12 +65,8 @@ export type CreateToyInput = {
   category: Scalars['String'];
   condition: ConditionEnum;
   description: Scalars['String'];
-  image: Scalars['String'];
   listPrice: Scalars['Float'];
-  location: Scalars['String'];
-  published: Scalars['Boolean'];
-  referenceURL: Scalars['String'];
-  subCategory: Scalars['String'];
+  published?: InputMaybe<Scalars['Boolean']>;
   title: Scalars['String'];
 };
 
@@ -84,6 +85,7 @@ export type LoginResponse = {
 };
 
 export type LoginUserInput = {
+  auth_type: AuthEnum;
   email_address: Scalars['String'];
   password: Scalars['String'];
 };
@@ -162,29 +164,21 @@ export type Toy = {
   condition: ConditionEnum;
   description: Scalars['String'];
   id: Scalars['ID'];
-  image: Scalars['String'];
   listPrice: Scalars['Float'];
-  location: Scalars['String'];
   published: Scalars['Boolean'];
-  referenceURL?: Maybe<Scalars['String']>;
-  subCategory: Scalars['String'];
   title: Scalars['String'];
 };
 
 export type UpdateToyInput = {
   ageRange: AgeRangeEnum;
-  author?: InputMaybe<Scalars['Float']>;
+  author: Scalars['Float'];
   brand: BrandEnum;
   category: Scalars['String'];
   condition: ConditionEnum;
   description: Scalars['String'];
   id: Scalars['ID'];
-  image: Scalars['String'];
   listPrice: Scalars['Float'];
-  location: Scalars['String'];
-  published: Scalars['Boolean'];
-  referenceURL: Scalars['String'];
-  subCategory: Scalars['String'];
+  published?: InputMaybe<Scalars['Boolean']>;
   title: Scalars['String'];
 };
 
@@ -201,21 +195,21 @@ export type User = {
 export type ToysQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ToysQuery = { __typename?: 'Query', toys: Array<{ __typename?: 'Toy', id: string, title: string, description: string, category: string, subCategory: string, image: string, listPrice: number, brand: BrandEnum, ageRange: AgeRangeEnum, condition: ConditionEnum, location: string, referenceURL?: string | null, published: boolean, author: number }> };
+export type ToysQuery = { __typename?: 'Query', toys: Array<{ __typename?: 'Toy', id: string, title: string, description: string, category: string, listPrice: number, brand: BrandEnum, ageRange: AgeRangeEnum, condition: ConditionEnum, published: boolean, author: number }> };
 
 export type PublishedToysQueryVariables = Exact<{
   published: Scalars['Boolean'];
 }>;
 
 
-export type PublishedToysQuery = { __typename?: 'Query', publishedToys: Array<{ __typename?: 'Toy', id: string, title: string, description: string, category: string, subCategory: string, image: string, listPrice: number, brand: BrandEnum, ageRange: AgeRangeEnum, condition: ConditionEnum, location: string, referenceURL?: string | null, published: boolean, author: number }> };
+export type PublishedToysQuery = { __typename?: 'Query', publishedToys: Array<{ __typename?: 'Toy', id: string, title: string, description: string, category: string, listPrice: number, brand: BrandEnum, ageRange: AgeRangeEnum, condition: ConditionEnum, published: boolean, author: number }> };
 
 export type ToysByAuthorQueryVariables = Exact<{
   author: Scalars['Float'];
 }>;
 
 
-export type ToysByAuthorQuery = { __typename?: 'Query', toysByAuthor: Array<{ __typename?: 'Toy', id: string, title: string, description: string, category: string, subCategory: string, image: string, listPrice: number, brand: BrandEnum, ageRange: AgeRangeEnum, condition: ConditionEnum, location: string, referenceURL?: string | null, published: boolean, author: number }> };
+export type ToysByAuthorQuery = { __typename?: 'Query', toysByAuthor: Array<{ __typename?: 'Toy', id: string, title: string, description: string, category: string, listPrice: number, brand: BrandEnum, ageRange: AgeRangeEnum, condition: ConditionEnum, published: boolean, author: number }> };
 
 export type LocalSignupMutationVariables = Exact<{
   input: CreateUserInput;
@@ -253,14 +247,10 @@ export const ToysDocument = gql`
     title
     description
     category
-    subCategory
-    image
     listPrice
     brand
     ageRange
     condition
-    location
-    referenceURL
     published
     author
   }
@@ -300,14 +290,10 @@ export const PublishedToysDocument = gql`
     title
     description
     category
-    subCategory
-    image
     listPrice
     brand
     ageRange
     condition
-    location
-    referenceURL
     published
     author
   }
@@ -348,14 +334,10 @@ export const ToysByAuthorDocument = gql`
     title
     description
     category
-    subCategory
-    image
     listPrice
     brand
     ageRange
     condition
-    location
-    referenceURL
     published
     author
   }

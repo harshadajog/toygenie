@@ -2,10 +2,11 @@ import { registerEnumType } from "@nestjs/graphql";
 
 export enum ConditionEnum {
     NEW,
-    USED_LIKE_NEW,
-    USED_VERY_GOOD,
-    USED_GOOD,
-    USED_ACCEPTABLE
+    USED
+    // USED_LIKE_NEW,
+    // USED_VERY_GOOD,
+    // USED_GOOD,
+    // USED_ACCEPTABLE
 }
 
 registerEnumType(ConditionEnum, {

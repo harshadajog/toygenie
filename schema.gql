@@ -7,19 +7,15 @@ type Toy {
   title: String!
   description: String!
   category: String!
-  subCategory: String!
-  image: String!
   listPrice: Float!
   brand: BrandEnum!
   ageRange: AgeRangeEnum!
   condition: ConditionEnum!
-  location: String!
-  referenceURL: String
   published: Boolean!
   author: Float!
 }
 
-"""TPopular brand names for toys"""
+"""Popular brand names for toys"""
 enum BrandEnum {
   BARBIE
   DISNEY
@@ -34,27 +30,26 @@ enum BrandEnum {
   MELISSA_AND_DOUG
   PAW_PATROL
   STAR_WARS
+  OTHER
 }
 
-"""TPopular brand names for toys"""
+"""Age Ranges"""
 enum AgeRangeEnum {
   NEWBORN
   INFANT
   TODDLER
-  PRESCHOOLER
-  MIDDLECHILDHOOD
-  YOUNGTEEN
+  PRE_SCHOOLER
+  MIDDLE_SCHOOLER
+  YOUNG_TEEN
   TEEN
   ADULT
+  ANY
 }
 
 """Condition values for toys"""
 enum ConditionEnum {
   NEW
-  USED_LIKE_NEW
-  USED_VERY_GOOD
-  USED_GOOD
-  USED_ACCEPTABLE
+  USED
 }
 
 """user """
@@ -93,15 +88,11 @@ input CreateToyInput {
   title: String!
   description: String!
   category: String!
-  subCategory: String!
-  image: String!
   listPrice: Float!
   brand: BrandEnum!
   ageRange: AgeRangeEnum!
   condition: ConditionEnum!
-  location: String!
-  referenceURL: String!
-  published: Boolean!
+  published: Boolean = true
   author: Float!
 }
 
@@ -109,22 +100,25 @@ input UpdateToyInput {
   title: String!
   description: String!
   category: String!
-  subCategory: String!
-  image: String!
   listPrice: Float!
   brand: BrandEnum!
   ageRange: AgeRangeEnum!
   condition: ConditionEnum!
-  location: String!
-  referenceURL: String!
-  published: Boolean!
-  author: Float
+  published: Boolean = true
+  author: Float!
   id: ID!
 }
 
 input LoginUserInput {
   email_address: String!
   password: String!
+  auth_type: AuthEnum!
+}
+
+"""Auth types"""
+enum AuthEnum {
+  LOCAL
+  GOOGLE
 }
 
 input CreateUserInput {
