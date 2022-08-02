@@ -4,8 +4,6 @@ type Toy {
   description: String!
   category: String!
   listPrice: Float!
-  brand: BrandEnum!
-  ageRange: AgeRangeEnum!
   condition: ConditionEnum!
   published: Boolean!
   author: Float!
@@ -18,8 +16,6 @@ query toys {
     description
     category
     listPrice
-    brand
-    ageRange
     condition
     published
     author
@@ -34,8 +30,6 @@ query publishedToys($published: Boolean!)  {
     description
     category
     listPrice
-    brand
-    ageRange
     condition
     published
     author
@@ -49,8 +43,6 @@ query toysByAuthor($author: Float!){
     description,
     category,
     listPrice,
-    brand,
-    ageRange,
     condition,
     published,
     author
@@ -84,6 +76,13 @@ mutation localSignup($input: CreateUserInput!){
 mutation createToy($input: CreateToyInput!){
   createToy(createToyInput: $input) {
     id
+    title
+    description
+    category
+    listPrice
+    condition
+    published
+    author
   }
   }
 
@@ -112,8 +111,6 @@ input CreateToyInput {
   description: String!
   category: String!
   listPrice: Float!
-  brand: BrandEnum!
-  ageRange: AgeRangeEnum!
   condition: ConditionEnum!
   published: Boolean = true
   author: Float!
@@ -124,8 +121,6 @@ input UpdateToyInput {
   description: String!
   category: String!
   listPrice: Float!
-  brand: BrandEnum!
-  ageRange: AgeRangeEnum!
   condition: ConditionEnum!
   published: Boolean = true
   author: Float!

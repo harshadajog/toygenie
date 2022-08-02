@@ -8,42 +8,9 @@ type Toy {
   description: String!
   category: String!
   listPrice: Float!
-  brand: BrandEnum!
-  ageRange: AgeRangeEnum!
   condition: ConditionEnum!
   published: Boolean!
   author: Float!
-}
-
-"""Popular brand names for toys"""
-enum BrandEnum {
-  BARBIE
-  DISNEY
-  FISHER_PRICE
-  HARRY_POTTER
-  HASBRO
-  HOT_WHEELS
-  MY_LITTLE_PONY
-  LEGO
-  LIGHTYEAR
-  MARVEL
-  MELISSA_AND_DOUG
-  PAW_PATROL
-  STAR_WARS
-  OTHER
-}
-
-"""Age Ranges"""
-enum AgeRangeEnum {
-  NEWBORN
-  INFANT
-  TODDLER
-  PRE_SCHOOLER
-  MIDDLE_SCHOOLER
-  YOUNG_TEEN
-  TEEN
-  ADULT
-  ANY
 }
 
 """Condition values for toys"""
@@ -89,8 +56,6 @@ input CreateToyInput {
   description: String!
   category: String!
   listPrice: Float!
-  brand: BrandEnum!
-  ageRange: AgeRangeEnum!
   condition: ConditionEnum!
   published: Boolean = true
   author: Float!
@@ -101,8 +66,6 @@ input UpdateToyInput {
   description: String!
   category: String!
   listPrice: Float!
-  brand: BrandEnum!
-  ageRange: AgeRangeEnum!
   condition: ConditionEnum!
   published: Boolean = true
   author: Float!

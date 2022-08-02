@@ -3,6 +3,8 @@ import { ToysService } from './toys.service'
 import { Toy } from './entities/toy.entity'
 import { CreateToyInput } from './dto/create-toy.input'
 import { UpdateToyInput } from './dto/update-toy.input'
+import { UseGuards } from '@nestjs/common'
+import { JwtAuthGuard } from '../auth/jwt-auth.guard'
 
 @Resolver(() => Toy)
 export class ToysResolver {
@@ -16,6 +18,7 @@ export class ToysResolver {
   }
 
   @Query(() => [Toy], { name: 'toys' })
+  @UseGuards(JwtAuthGuard)
   findAll() {
     return this.toysService.findAll()
   }

@@ -15,41 +15,10 @@ export type Scalars = {
   Float: number;
 };
 
-/** Age Ranges */
-export enum AgeRangeEnum {
-  Adult = 'ADULT',
-  Any = 'ANY',
-  Infant = 'INFANT',
-  MiddleSchooler = 'MIDDLE_SCHOOLER',
-  Newborn = 'NEWBORN',
-  PreSchooler = 'PRE_SCHOOLER',
-  Teen = 'TEEN',
-  Toddler = 'TODDLER',
-  YoungTeen = 'YOUNG_TEEN'
-}
-
 /** Auth types */
 export enum AuthEnum {
   Google = 'GOOGLE',
   Local = 'LOCAL'
-}
-
-/** Popular brand names for toys */
-export enum BrandEnum {
-  Barbie = 'BARBIE',
-  Disney = 'DISNEY',
-  FisherPrice = 'FISHER_PRICE',
-  HarryPotter = 'HARRY_POTTER',
-  Hasbro = 'HASBRO',
-  HotWheels = 'HOT_WHEELS',
-  Lego = 'LEGO',
-  Lightyear = 'LIGHTYEAR',
-  Marvel = 'MARVEL',
-  MelissaAndDoug = 'MELISSA_AND_DOUG',
-  MyLittlePony = 'MY_LITTLE_PONY',
-  Other = 'OTHER',
-  PawPatrol = 'PAW_PATROL',
-  StarWars = 'STAR_WARS'
 }
 
 /** Condition values for toys */
@@ -59,9 +28,7 @@ export enum ConditionEnum {
 }
 
 export type CreateToyInput = {
-  ageRange: AgeRangeEnum;
   author: Scalars['Float'];
-  brand: BrandEnum;
   category: Scalars['String'];
   condition: ConditionEnum;
   description: Scalars['String'];
@@ -157,9 +124,7 @@ export type QueryUserArgs = {
 
 export type Toy = {
   __typename?: 'Toy';
-  ageRange: AgeRangeEnum;
   author: Scalars['Float'];
-  brand: BrandEnum;
   category: Scalars['String'];
   condition: ConditionEnum;
   description: Scalars['String'];
@@ -170,9 +135,7 @@ export type Toy = {
 };
 
 export type UpdateToyInput = {
-  ageRange: AgeRangeEnum;
   author: Scalars['Float'];
-  brand: BrandEnum;
   category: Scalars['String'];
   condition: ConditionEnum;
   description: Scalars['String'];
@@ -195,21 +158,21 @@ export type User = {
 export type ToysQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ToysQuery = { __typename?: 'Query', toys: Array<{ __typename?: 'Toy', id: string, title: string, description: string, category: string, listPrice: number, brand: BrandEnum, ageRange: AgeRangeEnum, condition: ConditionEnum, published: boolean, author: number }> };
+export type ToysQuery = { __typename?: 'Query', toys: Array<{ __typename?: 'Toy', id: string, title: string, description: string, category: string, listPrice: number, condition: ConditionEnum, published: boolean, author: number }> };
 
 export type PublishedToysQueryVariables = Exact<{
   published: Scalars['Boolean'];
 }>;
 
 
-export type PublishedToysQuery = { __typename?: 'Query', publishedToys: Array<{ __typename?: 'Toy', id: string, title: string, description: string, category: string, listPrice: number, brand: BrandEnum, ageRange: AgeRangeEnum, condition: ConditionEnum, published: boolean, author: number }> };
+export type PublishedToysQuery = { __typename?: 'Query', publishedToys: Array<{ __typename?: 'Toy', id: string, title: string, description: string, category: string, listPrice: number, condition: ConditionEnum, published: boolean, author: number }> };
 
 export type ToysByAuthorQueryVariables = Exact<{
   author: Scalars['Float'];
 }>;
 
 
-export type ToysByAuthorQuery = { __typename?: 'Query', toysByAuthor: Array<{ __typename?: 'Toy', id: string, title: string, description: string, category: string, listPrice: number, brand: BrandEnum, ageRange: AgeRangeEnum, condition: ConditionEnum, published: boolean, author: number }> };
+export type ToysByAuthorQuery = { __typename?: 'Query', toysByAuthor: Array<{ __typename?: 'Toy', id: string, title: string, description: string, category: string, listPrice: number, condition: ConditionEnum, published: boolean, author: number }> };
 
 export type LocalSignupMutationVariables = Exact<{
   input: CreateUserInput;
@@ -230,7 +193,7 @@ export type CreateToyMutationVariables = Exact<{
 }>;
 
 
-export type CreateToyMutation = { __typename?: 'Mutation', createToy: { __typename?: 'Toy', id: string } };
+export type CreateToyMutation = { __typename?: 'Mutation', createToy: { __typename?: 'Toy', id: string, title: string, description: string, category: string, listPrice: number, condition: ConditionEnum, published: boolean, author: number } };
 
 export type RemoveToyMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -248,8 +211,6 @@ export const ToysDocument = gql`
     description
     category
     listPrice
-    brand
-    ageRange
     condition
     published
     author
@@ -291,8 +252,6 @@ export const PublishedToysDocument = gql`
     description
     category
     listPrice
-    brand
-    ageRange
     condition
     published
     author
@@ -335,8 +294,6 @@ export const ToysByAuthorDocument = gql`
     description
     category
     listPrice
-    brand
-    ageRange
     condition
     published
     author
@@ -453,6 +410,13 @@ export const CreateToyDocument = gql`
     mutation createToy($input: CreateToyInput!) {
   createToy(createToyInput: $input) {
     id
+    title
+    description
+    category
+    listPrice
+    condition
+    published
+    author
   }
 }
     `;

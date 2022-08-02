@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { gql, useMutation } from "@apollo/client";
+import { GET_PUBLISHED_TOYS } from '../../graphql/graphql';
 import { Box, Button, Container, CssBaseline, FormControl, FormControlLabel, FormHelperText, FormLabel, Grid, InputLabel, MenuItem, Paper, Radio, RadioGroup, Select, TextField, Typography } from '@mui/material';
 
-import {BrandEnum, ConditionEnum, AgeRangeEnum, useCreateToyMutation, usePublishedToysQuery } from '@toygenie/graphql-access';
+// import {BrandEnum, ConditionEnum, AgeRangeEnum, useCreateToyMutation, usePublishedToysQuery } from '@toygenie/graphql-access';
+import {ConditionEnum, useCreateToyMutation, usePublishedToysQuery } from '@toygenie/graphql-access';
 import ToastMessage from '../ToastMessage/ToastMessage';
 
 export function CreateToy() {
@@ -14,14 +17,15 @@ export function CreateToy() {
     title: "",
     description: "",
     condition: ConditionEnum.New,
-    brand: BrandEnum.Barbie,
-    ageRange: AgeRangeEnum.Infant,
+    //brand: BrandEnum.Barbie,
+    //ageRange: AgeRangeEnum.Infant,
     listPrice: 0.00,
-    category: AgeRangeEnum.Infant,
+    category: "STEM",
     author: user.id,
   }
   const [error, setError] = useState('');
   const [formValues, setFormValues] = useState(initialValues);
+  // const [addToy, {data:createToyData, loading, error:createToyError}] = useMutation(CREATE_TOY);
   const [createToyMutation, { data:createToyData, loading, error:createToyError }] = useCreateToyMutation({
       variables: {
       input: {
@@ -29,9 +33,10 @@ export function CreateToy() {
         description: formValues.description,
         listPrice: formValues.listPrice,
         condition: formValues.condition,
-        brand: formValues.brand,
-        ageRange: formValues.ageRange,
-        category: formValues.category,
+        category: "STEM",
+        // brand: formValues.brand,
+        // ageRange: formValues.ageRange,
+        // category: formValues.category,
         author: user.id,
         published: true,
       }
@@ -39,8 +44,10 @@ export function CreateToy() {
   });
     
   const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
-        const { name, value } = e.target;
+        let { name, value } = e.target;
         console.log(name," " ,value);
+        if(name==="listPrice") 
+          value = parseFloat(value);
         setFormValues({
             ...formValues,
             [name]: value,
@@ -51,19 +58,63 @@ export function CreateToy() {
 
         event.preventDefault();
         console.log("Inside create toy handle submit", formValues);
+        // addToy({
+        //     variables: {
+        //     input: {
+        //       title: formValues.title,
+        //       description: formValues.description,
+        //       listPrice: formValues.listPrice,
+        //       condition: formValues.condition,
+        //       // brand: formValues.brand,
+        //       // ageRange: formValues.ageRange,
+        //       category: initialValues.category,
+        //       author: user.id,
+        //       published: true
+        //     }
+        //   }
+        // })
         createToyMutation ({
           variables: {
             input: {
               title: formValues.title,
               description: formValues.description,
-              listPrice: 100,
+              listPrice: formValues.listPrice,
               condition: formValues.condition,
-              brand: formValues.brand,
-              ageRange: formValues.ageRange,
               category: initialValues.category,
               author: user.id,
               published: true
             }
+          },
+          update(cache, {data}){
+            console.log(" cached data: ", data);
+           const getExistingToys: any = cache.readQuery({
+                  query: GET_PUBLISHED_TOYS,
+                  variables:{
+                    published: true
+                  },
+                })
+           console.log("Toys already in cache: ", getExistingToys);
+            const existingToys = getExistingToys? getExistingToys.publishedToys: [];
+            const newToy = {
+              id: data?.createToy!.id,
+              title: data?.createToy!.title,
+              description: data?.createToy!.description,
+              category: data?.createToy!.category,
+              listPrice: data?.createToy!.listPrice,
+              condition: data?.createToy!.condition,
+              published: data?.createToy!.published,
+              author: data?.createToy!.author,
+              __typename: "Toy"
+            }
+
+            console.log("New toy: ", newToy);
+            cache.writeQuery({
+              query: GET_PUBLISHED_TOYS,
+              variables:{
+                published: true
+              },
+              data: {publishedToys: [newToy, ...existingToys]}
+              });
           }
         })
       };
@@ -85,7 +136,7 @@ export function CreateToy() {
         draggable: true,
         progress: undefined,
         });
-        navigate("/dashboard");
+       navigate("/dashboard");
     }
   }, [createToyData, createToyError])
 
@@ -102,23 +153,23 @@ export function CreateToy() {
         },
       );
 
-      const displayBrandValues = (Object.values(BrandEnum)).map(
-        (val, index) => {
-          let str = val.replace("_", " ");
-          return (
-            <MenuItem key={index} value={val}>{str}</MenuItem>
-          )
-        },
-      );
+      // const displayBrandValues = (Object.values(BrandEnum)).map(
+      //   (val, index) => {
+      //     let str = val.replace("_", " ");
+      //     return (
+      //       <MenuItem key={index} value={val}>{str}</MenuItem>
+      //     )
+      //   },
+      // );
 
-      const displayAgeRangeValues = (Object.values(AgeRangeEnum)).map(
-        (val, index) => {
-          let str = val.replace("_", " ");
-          return (
-            <MenuItem key={index} value={val}>{str}</MenuItem>
-          )
-        },
-      );
+      // const displayAgeRangeValues = (Object.values(AgeRangeEnum)).map(
+      //   (val, index) => {
+      //     let str = val.replace("_", " ");
+      //     return (
+      //       <MenuItem key={index} value={val}>{str}</MenuItem>
+      //     )
+      //   },
+      // );
 
     return (
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
@@ -160,7 +211,7 @@ export function CreateToy() {
               </RadioGroup>
           </FormControl>
       </Grid>
-      <FormControl sx={{ m: 1, minWidth: 120 }}>
+      {/* <FormControl sx={{ m: 1, minWidth: 120 }}>
           <InputLabel id="brand">Brand</InputLabel>
           <Select
               labelId="brand-label"
@@ -207,7 +258,7 @@ export function CreateToy() {
           <FormHelperText>
               Select Category
           </FormHelperText>
-      </FormControl>
+      </FormControl> */}
       <TextField
           margin="normal"
           required

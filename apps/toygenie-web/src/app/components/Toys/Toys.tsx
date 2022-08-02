@@ -1,16 +1,23 @@
 import { Box, Card, Container, Grid, Paper, Toolbar, Typography } from "@mui/material";
 import { usePublishedToysQuery } from "@toygenie/graphql-access";
 import { useEffect } from "react";
+import { gql, useQuery, useMutation } from "@apollo/client";
+import { GET_PUBLISHED_TOYS } from '../../graphql/graphql';
 import CustomCard from '../CustomCard/Customcard';
 
 
 export default function Toys ({published}:{published:boolean}) {
-    
-    const { data: toysData, loading, error:toysError } = usePublishedToysQuery({
-        variables: {
+    const { loading, error: toysError, data: toysData } = useQuery(GET_PUBLISHED_TOYS, {
+        variables:{
             published: true
         }
-    });
+    })
+    
+    // const { data: toysData, loading, error:toysError } = usePublishedToysQuery({
+    //     variables: {
+    //         published: true
+    //     }
+    // });
     if (loading) return <p>Loading...</p>;
     if (toysError) return <p>Error :(</p>;
     console.log("Calling Published Toys", toysData && toysData?.publishedToys);    
@@ -29,7 +36,7 @@ export default function Toys ({published}:{published:boolean}) {
         <Toolbar />
             <Container component="main" maxWidth="lg" sx={{ mb: 8 }}>
                 <Grid container spacing={4}>
-            {toysData?.publishedToys.map((toy) => (
+            {toysData?.publishedToys.map((toy:any) => (
                 <Grid key={toy.id} item xs={12} sm={6} md={4}>
                     <CustomCard toy={toy} />
                 </Grid>  

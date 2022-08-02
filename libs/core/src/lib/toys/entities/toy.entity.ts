@@ -23,11 +23,11 @@ export class Toy {
   @Field()
   listPrice: number;
 
-  @Field(type => BrandEnum)
-  brand: BrandEnum;
+  // @Field(type => BrandEnum)
+  // brand: BrandEnum;
 
-  @Field(type => AgeRangeEnum)
-  ageRange: AgeRangeEnum;
+  // @Field(type => AgeRangeEnum)
+  // ageRange: AgeRangeEnum;
 
   @Field(type => ConditionEnum)
   condition: ConditionEnum;
