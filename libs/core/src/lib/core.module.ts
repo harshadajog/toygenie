@@ -7,6 +7,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { CoreResolver } from "./core.resolver";
 import { ToysModule } from './toys/toys.module';
 import { UsersModule } from './users/users.module';
+import { MessagingModule } from './messaging/messaging.module';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
@@ -22,7 +23,7 @@ import { AuthModule } from './auth/auth.module';
       debug: true,
       playground: true,
     }),
-    ToysModule, UsersModule, AuthModule,
+    ToysModule, UsersModule, MessagingModule, AuthModule,
   ],
   controllers: [],
   providers: [CoreResolver],

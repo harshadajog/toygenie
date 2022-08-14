@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
+// import AppBar from '@mui/material/AppBar';
+// import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -13,6 +13,8 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import MailIcon from '@mui/icons-material/Mail';
+import {AppBar, Box, Badge } from '@mui/material';
 import IUser from '../../interfaces/IUser';
 import LoginContext from '../../context/LoginContext';
 
@@ -58,22 +60,6 @@ const MUIAppBar = () => {
           <Link to="dashboard">
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color: 'white' }} />
           </Link>
-          {/* <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'Pacifico',
-              fontWeight: 400,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          > */}
-            {/* <Link style={{letterSpacing: '.3rem', fontWeight: 400, fontFamily: "Pacifico", color: "inherit", textDecoration: 'none'}} to="dashboard">Toy Genie</Link> */}
-          {/* </Typography> */}
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -142,6 +128,14 @@ const MUIAppBar = () => {
                 <Link style={{textDecoration: "none", color: "white"}} to={`/${page.name}`}>{page.display}</Link>
               </Button>
             ))}
+          </Box>
+
+          <Box sx={{ flexGrow: 0 }}>    
+          <IconButton>
+          <Badge badgeContent={loginContext.unread} color="primary">
+            <MailIcon style={{textDecoration: "none", color: "white"}} />
+          </Badge>
+          </IconButton>
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>

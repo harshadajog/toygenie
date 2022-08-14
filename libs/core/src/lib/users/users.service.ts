@@ -19,6 +19,14 @@ export class UsersService {
       email_address: 'testuser1@gmail.com',
       // password: 'more-secure'
       password: '$2b$10$13DirdZlA3LF8XN4GkD/N.XClqu.EpLpidedIUAk/Ql7ge5VFd0hq'
+    },
+    {
+      id: 3,
+      first_name: 'Test',
+      last_name: 'Receive',
+      email_address: 'testreceive1@gmail.com',
+      // password: 'more-secure'
+      password: '$2b$10$13DirdZlA3LF8XN4GkD/N.XClqu.EpLpidedIUAk/Ql7ge5VFd0hq'
     }
   ]
 
@@ -41,5 +49,11 @@ export class UsersService {
     console.log("Inside user service findOne");
     console.log(this.users.find((user) => user.email_address === email_address));
     return this.users.find((user) => user.email_address === email_address);
+  }
+
+  findUserById(id: number) {
+    console.log("Inside user service findUserById");
+    console.log(this.users.find((user) => user.id === id));
+    return this.users.find((user) => user.id === id);
   }
 }

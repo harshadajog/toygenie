@@ -8,8 +8,8 @@
       "brand": 2,
       "ageRange": 1,
       "condition": 1,
-      "published": true,
-      "author": 1
+      "author": 1,
+      "saleStatus": 0
     },
     {
         "id": 2,  
@@ -20,7 +20,67 @@
         "brand": 4,
         "ageRange": 3,
         "condition": 1,
-        "published": true,
-        "author": 2
+        "author": 2,
+        "saleStatus": 0
+      },
+      {
+        "id": 3,  
+        "title": "Butterfly Growing Kit",
+        "description": "Introduce your kids and to the Monopoly Junior game. It's a fun birthday or holiday gift for kids, and is a great board game for family game night",
+        "category": "Nature Kit",
+        "listPrice": 20,
+        "brand": 4,
+        "ageRange": 3,
+        "condition": 1,
+        "author": 1,
+        "saleStatus": 0
+      },
+      {
+        "id": 4,  
+        "title": "Musical Book",
+        "description": "Fun facts about animals provide an early introduction to science concepts",
+        "category": "Nature Kit",
+        "listPrice": 20,
+        "brand": 4,
+        "ageRange": 3,
+        "condition": 1,
+        "author": 2,
+        "saleStatus": 0
+      },
+      {
+        "id": 5,  
+        "title": "Barbie Mermaid Toy",
+        "description": "Dolls and Accessories",
+        "category": "Dolls",
+        "listPrice": 20,
+        "brand": 4,
+        "ageRange": 3,
+        "condition": 1,
+        "author": 2,
+        "saleStatus": 4
+      },
+      {
+        "id": 6,  
+        "title": "Ice Cream Cart Deluxe",
+        "description": "The ice cream playset includes a magic scooper to scoop up ice cream and toppings to create tasty-looking treats while introducing kids to colors & flavors",
+        "category": "Learning Toys",
+        "listPrice": 20,
+        "brand": 4,
+        "ageRange": 3,
+        "condition": 1,
+        "author": 2,
+        "saleStatus": 4
+      },
+      {
+        "id": 7,  
+        "title": "Touch and Learn Activity Desk",
+        "description": "Activity table features an interactive desktop and four double-sided cards that introduce numbers, letters, animals, music, People and more",
+        "category": "Nature Kit",
+        "listPrice": 20,
+        "brand": 4,
+        "ageRange": 3,
+        "condition": 1,
+        "author": 2,
+        "saleStatus": 4
       }
   ]

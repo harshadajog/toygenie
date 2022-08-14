@@ -3,7 +3,7 @@ import styles from './app.module.scss';
 import { useContext, useEffect, useState } from 'react';
 import { Route, Routes, Link, NavLink } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider, gql, useLazyQuery } from '@apollo/client';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -13,7 +13,12 @@ import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
 import Dashboard from './pages/DashBoardPage';
 import CreateToyPage from './pages/CreateToyPage';
-// import UserRecipesPage from './pages/UserRecipesPage';
+import ToysByAuthor from './pages/ToysByAuthor';
+import CardDetails from './components/CardDetails/CardDetails';
+import ProtectedRoute, { ProtectedRouteProps } from './components/ProtectedRoute/ProtectedRoute';
+
+import ToyDetail from './components/Toy/ToyDetail';
+import { GET_UNREAD_BY_RECEPIENT } from './graphql/graphql';
 
 const client = new ApolloClient({
   uri: 'http://localhost:3000/graphql',
@@ -22,39 +27,116 @@ const client = new ApolloClient({
 });
 
 const initializeSignIn = () => {
-  let status = window.localStorage.getItem("SIGNED_IN");
+ let jsonValue =  window.localStorage.getItem("USER");
+ if (jsonValue != null) return JSON.parse(jsonValue);
 
-  // provides verification to the front-end the login status
-  //let loggedInStatus = (verifyToken() && status === "true") ? "true" : "false";
-  // window.localStorage.setItem(LocalStorageTerms.SIGNED_IN, loggedInStatus);
-
-  return (status === "true") ? true: false;
 };
 
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark'
+  }});
+//     background: {
+//       default: '#FFFFF0' //ivory,
+//       //paper: '#b6c48e'
+//     },
+//     text: {
+//       primary: '#82716e'
+//     },
+//     primary:{
+//       main: '#abd699'
+//     }
+//   }
+  // palette: {
+  //   background: {
+  //     default: '#fceed1'
+  //   },
+  //   primary: {
+  //     main: '#ebf6f5'
+  //   },
+  //   text: {
+  //     primary: "#0000"
+  //   }
+  // }
+// });
+
 export function App() {
-  const theme = createTheme();
+ // const theme = createTheme();
   const loginContext = useContext(LoginContext);
   const [signedIn, setSignedIn] = useState<boolean>(initializeSignIn);
   const [user, setUser] = useState(null);
+  const [unread, setUnread] = useState(0);
 
   useEffect(() => {
-    setSignedIn(loginContext.signedIn);
-  }, [loginContext.signedIn])
+    const loggedInUser = localStorage.getItem("USER");
+    if (loggedInUser) {
+      const foundUser = JSON.parse(loggedInUser);
+      setUser(foundUser);
+      setSignedIn(true);
+    }
+  }, []);
+
+  const defaultProtectedRouteProps: Omit<ProtectedRouteProps, "outlet"> = {
+    isAuthenticated: !!loginContext.signedIn,
+    authenticationPath: "/login",
+  };
 
   return (
     <>
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={darkTheme}>
     <ApolloProvider client={client}>
-      <LoginContext.Provider value={{ signedIn, setSignedIn}}>
-      <div className="wrapper">
+      <LoginContext.Provider value={{ signedIn, setSignedIn, unread, setUnread }}>
+      <div className="app">
         <Layout>
       <Routes>
         <Route path="signup" element={<SignUpPage />} />
         <Route path="login" element={<SignInPage />} />
-        <Route path="dashboard" element={<Dashboard />} />
         <Route path="/" element={<Dashboard />} />
-        <Route path="my-listings" element={<CreateToyPage />} />
-        <Route path="create-listing" element={<CreateToyPage />} />
+        {/* <Route
+          path="/"
+          element={
+            <ProtectedRoute
+              {...defaultProtectedRouteProps}
+              outlet={<Dashboard />}
+            />
+          }
+        /> */}
+        <Route
+          path="dashboard"
+          element={
+            <ProtectedRoute
+              {...defaultProtectedRouteProps}
+              outlet={<Dashboard />}
+            />
+          }
+        />
+        <Route
+          path="my-listings"
+          element={
+            <ProtectedRoute
+              {...defaultProtectedRouteProps}
+              outlet={<ToysByAuthor />}
+            />
+          }
+        />
+        <Route
+          path="create-listing"
+          element={
+            <ProtectedRoute
+              {...defaultProtectedRouteProps}
+              outlet={<CreateToyPage />}
+            />
+          }
+        />
+        <Route
+          path="toy-details"
+          element={
+            <ProtectedRoute
+              {...defaultProtectedRouteProps}
+              outlet={<ToyDetail />}
+            />
+          }
+        />
       </Routes>
       </Layout>  
       <ToastContainer

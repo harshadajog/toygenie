@@ -5,6 +5,7 @@ import { CreateToyInput } from './dto/create-toy.input'
 import { UpdateToyInput } from './dto/update-toy.input'
 import { UseGuards } from '@nestjs/common'
 import { JwtAuthGuard } from '../auth/jwt-auth.guard'
+import { ToyStatusEnum } from './enums/ToyStatusEnum'
 
 @Resolver(() => Toy)
 export class ToysResolver {
@@ -24,13 +25,14 @@ export class ToysResolver {
   }
 
   @Query(returns => [Toy])
-  publishedToys(@Args('published', { type: () => Boolean }) published: boolean) {
-    return this.toysService.findAllPublished(published);
+  findAllByStatus(
+    @Args('saleStatus', { type: () => ToyStatusEnum }) saleStatus: ToyStatusEnum) {
+    return this.toysService.findAllByStatus(saleStatus);
   }
 
   @Query(returns => [Toy])
-  toysByAuthor(@Args('author') author: number) {
-    return this.toysService.findByAuthor(author);
+  findAllByAuthor(@Args('author') author: number) {
+    return this.toysService.findAllByAuthor(author);
   }
 
   @Query(() => Toy, { name: 'toy' })

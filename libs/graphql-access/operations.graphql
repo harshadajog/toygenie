@@ -1,3 +1,5 @@
+scalar DateTime
+
 type Toy {
   id: ID!
   title: String!
@@ -5,8 +7,19 @@ type Toy {
   category: String!
   listPrice: Float!
   condition: ConditionEnum!
-  published: Boolean!
   author: Float!
+  saleStatus: ToyStatusEnum!
+}
+
+type Messaging {
+  id: ID!
+  parent_message_id: Float!
+  subject: String!
+  messageBody: String!
+  creator_id: Float!
+  recipient_id: Float!
+  created_date: DateTime!
+  is_read: Boolean!
 }
 
 query toys {
@@ -17,35 +30,54 @@ query toys {
     category
     listPrice
     condition
-    published
     author
    
   }
 }
 
-query publishedToys($published: Boolean!)  {
-  publishedToys(published: $published){
+query findAllByStatus($saleStatus: ToyStatusEnum!)  {
+  findAllByStatus(saleStatus: $saleStatus){
     id
     title
     description
     category
     listPrice
     condition
-    published
     author
+    saleStatus
   }
 }
 
-query toysByAuthor($author: Float!){
-  toysByAuthor(author: $author){
+query findAllByAuthor($author: Float!){
+  findAllByAuthor(author: $author){
     id,
     title,
     description,
     category,
     listPrice,
     condition,
-    published,
-    author
+    author,
+    saleStatus
+  }
+}
+
+query findUserById ($id: Float!) {
+  userById(id: $id) {
+    first_name
+    last_name
+    email_address
+  }
+}
+
+query findUnreadMessagesReceivedByUser($recepient: Float!)  {
+  unreadMessages(recepient: $recepient){
+    id
+    parent_message_id
+    subject
+    messageBody
+    creator_id
+    recipient_id
+    is_read
   }
 }
 
@@ -75,14 +107,14 @@ mutation localSignup($input: CreateUserInput!){
 
 mutation createToy($input: CreateToyInput!){
   createToy(createToyInput: $input) {
-    id
+		id
     title
     description
     category
     listPrice
     condition
-    published
     author
+    saleStatus
   }
   }
 
@@ -92,6 +124,19 @@ mutation createToy($input: CreateToyInput!){
     author
   }
 }
+
+mutation createmessage($input: CreateMessagingInput!){
+  createMessage(createMessagingInput: $input) {
+		id
+    parent_message_id
+    subject
+    messageBody
+    created_date
+    creator_id
+   	recipient_id
+    is_read
+  }
+  }
 
 input LoginUserInput {
   email_address: String!
@@ -112,8 +157,8 @@ input CreateToyInput {
   category: String!
   listPrice: Float!
   condition: ConditionEnum!
-  published: Boolean = true
   author: Float!
+  saleStatus: ToyStatusEnum!
 }
 
 input UpdateToyInput {
@@ -122,11 +167,20 @@ input UpdateToyInput {
   category: String!
   listPrice: Float!
   condition: ConditionEnum!
-  published: Boolean = true
   author: Float!
+  saleStatus: ToyStatusEnum!
   id: ID!
 }
 
+input CreateMessagingInput {
+  parent_message_id: Float!
+  subject: String!
+  messageBody: String!
+  creator_id: Float!
+  recipient_id: Float!
+  created_date: DateTime!
+  is_read: Boolean!
+}
 
 # Auth types
 enum AuthEnum {
@@ -168,5 +222,14 @@ enum AgeRangeEnum {
 enum ConditionEnum {
   NEW
   USED
+}
+
+# Sale status for the toy
+enum ToyStatusEnum {
+  ACTIVE
+  PENDING
+  DISAPPROVED
+  EXPIRED
+  SOLD
 }
 

@@ -12,15 +12,14 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useLocalSignupMutation } from '@toygenie/graphql-access';
 import { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import IUser from '../interfaces/IUser';
-
-const theme = createTheme();
+import LoginContext from '../context/LoginContext';
 
 export default function SignUp() {
+  const loginContext = React.useContext(LoginContext);
     // Error variables for inline field validations
     const [fieldErrors, setFieldErrors] = useState({
       email_address: null,
@@ -80,6 +79,17 @@ export default function SignUp() {
       }
       else if (signupData) {
       console.log(signupData);
+      let newUser = signupData.localSignup.user;
+      let user: IUser = {
+        id: newUser.id,
+        first_name: newUser.first_name,
+        last_name: newUser.last_name,
+        email_address:  newUser.email_address,
+        roles: 'USER',
+        auth_token: signupData.localSignup.access_token
+      }
+      window.localStorage.setItem("USER", JSON.stringify(user));
+     loginContext.setSignedIn(true);
        navigate("/dashboard");
         
       }
@@ -163,7 +173,7 @@ export default function SignUp() {
                     fullWidth
                     name="password"
                     label="Password"
-                    // type="password"
+                    type="password"
                     id="password"
                     autoComplete="new-password"
                     value={password}
@@ -176,7 +186,7 @@ export default function SignUp() {
                     fullWidth
                     name="confirmPassword"
                     label="Confirm Password"
-                    // type="password"
+                    type="password"
                     id="confirmPassword"
                     autoComplete="confirm-password"
                     value={confirmPassword}

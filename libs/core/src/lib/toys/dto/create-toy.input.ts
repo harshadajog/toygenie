@@ -3,6 +3,7 @@ import { IsOptional, Length, MaxLength } from 'class-validator';
 import { AgeRangeEnum } from '../enums/AgeRangeEnum';
 import { BrandEnum } from '../enums/BrandEnum';
 import { ConditionEnum } from '../enums/ConditionEnum';
+import { ToyStatusEnum } from '../enums/ToyStatusEnum';
 
 @InputType()
 export class CreateToyInput {
@@ -40,11 +41,10 @@ export class CreateToyInput {
 
   // @Field({ nullable: true })
   // referenceURL: string;
-
-  @Field({defaultValue: true})
-  published: boolean;
-
+  
   @Field()
   author: number;
 
+  @Field(type => ToyStatusEnum)
+  saleStatus: ToyStatusEnum;
 }

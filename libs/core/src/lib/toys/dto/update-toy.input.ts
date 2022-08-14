@@ -3,6 +3,7 @@ import { InputType, Field, Int, PartialType, ID } from '@nestjs/graphql';
 import { BrandEnum } from '../enums/BrandEnum';
 import { AgeRangeEnum } from '../enums/AgeRangeEnum';
 import { ConditionEnum } from '../enums/ConditionEnum';
+import { ToyStatusEnum } from '../enums/ToyStatusEnum';
 
 @InputType()
 export class UpdateToyInput extends PartialType(CreateToyInput) {
@@ -42,10 +43,9 @@ export class UpdateToyInput extends PartialType(CreateToyInput) {
   // @Field({ nullable: true })
   // referenceURL: string;
 
-  @Field({defaultValue: true})
-  published: boolean;
-
   @Field()
   author: number;
 
+  @Field(type => ToyStatusEnum)
+  saleStatus: ToyStatusEnum;
 }

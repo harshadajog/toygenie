@@ -20,4 +20,9 @@ export class UsersResolver {
   findOne(@Args('email_address') email_address: string) {
     return this.usersService.findOne(email_address);
   }
+
+  @Query(() => User, { name: 'userById' })
+  findUserById(@Args('id') id: number) {
+    return this.usersService.findUserById(id);
+  }
 }

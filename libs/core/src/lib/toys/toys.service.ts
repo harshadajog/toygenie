@@ -29,13 +29,13 @@ export class ToysService {
     return this.toys;
   }
 
-  async findAllPublished(published: boolean) {
+  async findAllByStatus(saleStatus) {
     console.log(this.toys);
-    console.log(this.toys.filter((toy) => {return toy.published == published}));
-    return this.toys.filter((toy) => {return toy.published == published});
+    console.log(this.toys.filter((toy) => {return toy.saleStatus == saleStatus}));
+    return this.toys.filter((toy) => {return toy.saleStatus == saleStatus});
   }
 
-  async findByAuthor(author: number) {
+  async findAllByAuthor(author: number) {
     return this.toys.filter((toy) => {return toy.author == author});
   }
 

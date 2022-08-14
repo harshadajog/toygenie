@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { gql, useMutation } from "@apollo/client";
-import { GET_PUBLISHED_TOYS } from '../../graphql/graphql';
+import { GET_TOYS_FOR_SALE } from '../../graphql/graphql';
 import { Box, Button, Container, CssBaseline, FormControl, FormControlLabel, FormHelperText, FormLabel, Grid, InputLabel, MenuItem, Paper, Radio, RadioGroup, Select, TextField, Typography } from '@mui/material';
 
 // import {BrandEnum, ConditionEnum, AgeRangeEnum, useCreateToyMutation, usePublishedToysQuery } from '@toygenie/graphql-access';
-import {ConditionEnum, useCreateToyMutation, usePublishedToysQuery } from '@toygenie/graphql-access';
+import {ConditionEnum, useCreateToyMutation, ToyStatusEnum } from '@toygenie/graphql-access';
 import ToastMessage from '../ToastMessage/ToastMessage';
 
 export function CreateToy() {
@@ -22,6 +22,7 @@ export function CreateToy() {
     listPrice: 0.00,
     category: "STEM",
     author: user.id,
+    saleStatus: ToyStatusEnum.Active
   }
   const [error, setError] = useState('');
   const [formValues, setFormValues] = useState(initialValues);
@@ -38,7 +39,7 @@ export function CreateToy() {
         // ageRange: formValues.ageRange,
         // category: formValues.category,
         author: user.id,
-        published: true,
+        saleStatus: ToyStatusEnum.Active
       }
     }
   });
@@ -82,19 +83,19 @@ export function CreateToy() {
               condition: formValues.condition,
               category: initialValues.category,
               author: user.id,
-              published: true
+              saleStatus: ToyStatusEnum.Active
             }
           },
           update(cache, {data}){
             console.log(" cached data: ", data);
            const getExistingToys: any = cache.readQuery({
-                  query: GET_PUBLISHED_TOYS,
+                  query: GET_TOYS_FOR_SALE,
                   variables:{
-                    published: true
+                    saleStatus: ToyStatusEnum.Active
                   },
                 })
            console.log("Toys already in cache: ", getExistingToys);
-            const existingToys = getExistingToys? getExistingToys.publishedToys: [];
+            const existingToys = getExistingToys? getExistingToys.findAllByStatus: [];
             const newToy = {
               id: data?.createToy!.id,
               title: data?.createToy!.title,
@@ -102,18 +103,18 @@ export function CreateToy() {
               category: data?.createToy!.category,
               listPrice: data?.createToy!.listPrice,
               condition: data?.createToy!.condition,
-              published: data?.createToy!.published,
               author: data?.createToy!.author,
+              saleStatus: data?.createToy!.saleStatus,
               __typename: "Toy"
             }
 
             console.log("New toy: ", newToy);
             cache.writeQuery({
-              query: GET_PUBLISHED_TOYS,
+              query: GET_TOYS_FOR_SALE,
               variables:{
-                published: true
+                saleStatus: ToyStatusEnum.Active
               },
-              data: {publishedToys: [newToy, ...existingToys]}
+              data: {findAllByStatus: [newToy, ...existingToys]}
               });
           }
         })
@@ -211,54 +212,6 @@ export function CreateToy() {
               </RadioGroup>
           </FormControl>
       </Grid>
-      {/* <FormControl sx={{ m: 1, minWidth: 120 }}>
-          <InputLabel id="brand">Brand</InputLabel>
-          <Select
-              labelId="brand-label"
-              id="brand-select-helper"
-              label="Brand"
-              name="brand"
-              value={formValues.brand}
-              onChange={handleInputChange}
-          >
-           {displayBrandValues}
-          </Select>
-          <FormHelperText>
-              Select brand
-          </FormHelperText>
-      </FormControl>
-      <FormControl sx={{ m: 1, minWidth: 120 }}>
-          <InputLabel id="ageRange">Age Range</InputLabel>
-          <Select
-              labelId="ageRange-label"
-              id="ageRange-select-helper"
-              label="Age Range"
-              name="ageRange"
-              value={formValues.ageRange}
-              onChange={handleInputChange}
-          >
-           {displayAgeRangeValues}
-          </Select>
-          <FormHelperText>
-              Select Age Range
-          </FormHelperText>
-      </FormControl>
-      <FormControl sx={{ m: 1, minWidth: 120 }}>
-          <InputLabel id="category">Category</InputLabel>
-          <Select
-              labelId="category-label"
-              id="category-select-helper"
-              label="Category"
-              name="category"
-              value={formValues.category}
-              onChange={handleInputChange}
-          >
-           {displayAgeRangeValues}
-          </Select>
-          <FormHelperText>
-              Select Category
-          </FormHelperText>
-      </FormControl> */}
       <TextField
           margin="normal"
           required

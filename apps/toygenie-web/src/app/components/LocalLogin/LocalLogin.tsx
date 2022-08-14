@@ -1,18 +1,22 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
+import {gql, useLazyQuery } from '@apollo/client';
 import { AuthEnum, useLoginMutation } from "@toygenie/graphql-access";
 import { useEffect, useState, useContext } from "react";
 import IUser from "../../interfaces/IUser";
 import LoginContext from '../../context/LoginContext';
+import { GET_UNREAD_BY_RECEPIENT } from "../../graphql/graphql";
 
 export function LocalLogin({}) {
     const [email_address, setEmailAddress] = useState('');
     const loginContext = useContext(LoginContext);
+    const [loggedInUser, setLoggedInUser] = useState<IUser>();
     const [password, setPassword] = useState('');
     const [data, setData] = useState(null);
     const [error, setError] = useState('');
     const auth_type=AuthEnum.Local;
     const navigate = useNavigate();
+
 
     const [loginMutation, { data: loginData, loading, error: loginError }] = useLoginMutation({
         variables: {
@@ -21,6 +25,12 @@ export function LocalLogin({}) {
           password,
           auth_type
           }
+        }
+      });
+
+      const [getUnread, { data: msgData, loading: msgLoading, error: msgError }] = useLazyQuery(GET_UNREAD_BY_RECEPIENT, {
+        variables: {
+            recepient: loggedInUser?.id
         }
       });
 
@@ -55,14 +65,36 @@ export function LocalLogin({}) {
         roles: 'USER',
         auth_token: loginData.login.access_token
       }
+      setLoggedInUser(user);
       window.localStorage.setItem("USER", JSON.stringify(user));
      loginContext.setSignedIn(true);
-     navigate("/dashboard");
     }
-  }, [loginData, loginError])
+  }, [loginData, loginError]);
+
+  useEffect(() => {
+    if(loggedInUser){
+      console.log("type of loggedInUserId", typeof loggedInUser.id);
+      getUnread({
+        variables: {
+            recepient: loggedInUser.id
+        }
+      })
+    }
+  }, [loggedInUser])
+
+    useEffect(() => {
+      console.log("message useeffect");
+      if(msgError)
+        console.log("Error fetching unread messages: ", msgError);
+      else if(msgData && msgData.unreadMessages){
+        console.log("Data fetching unread messages: ", msgData);
+        loginContext.setUnread(msgData.unreadMessages.length);
+        navigate("/dashboard");
+      }  
+    }, [msgData, msgError])
 
     return (
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 4}}>
         <TextField
           margin="normal"
           required

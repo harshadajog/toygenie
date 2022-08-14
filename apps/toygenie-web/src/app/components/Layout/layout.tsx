@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import MUIAppBar from '../AppBar/AppBar';
 import LoginContext from '../../context/LoginContext';
+import ClippedDrawer from '../Drawer/Drawer';
 
 export function Layout(props: PropsWithChildren) {
   const loginContext  = useContext(LoginContext);

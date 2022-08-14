@@ -16,32 +16,39 @@ import { useLoginMutation, AuthEnum } from '@toygenie/graphql-access';
 import logo from '../../assets/ToyGenie.png';
 import { LoginWithGoogle } from '../components/GoogleLogin/LoginWithGoogle';
 import { LocalLogin } from '../components/LocalLogin/LocalLogin';
+import { Container } from '@mui/material';
 
 
 export default function SignIn() {
 
   return (
-      <Grid container component="main" sx={{ height: '100vh' }}>
-        <CssBaseline />
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={7}
-          sx={{
-            backgroundImage: 'url(../../assets/ToyGenie6.png)',
-            backgroundRepeat: 'no-repeat',
-            backgroundColor: (t) =>
-              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+      // <Grid container component="main" sx={{ height: '100vh' }}>
+      //   <CssBaseline />
+      //   <Grid
+      //     item
+      //     xs={false}
+      //     sm={4}
+      //     md={7}
+      //     sx={{
+      //       backgroundImage: 'url(../../assets/ToyGenie6.png)',
+      //       backgroundRepeat: 'no-repeat',
+      //       // backgroundColor: (t) =>
+      //       //   t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+      //       backgroundSize: 'cover',
+      //       backgroundPosition: 'center',
+      //     }}
+      //   />
+        //  <Container component="main" maxWidth="sm" sx={{ mb: 4}}>
+        <Grid container component="main" sx={{ height: '100vh', backgroundImage: 'url(../../assets/background1.jpg)', backgroundSize: 'cover' }} 
+        
+        >
+        <Container component="main" maxWidth="sm">
+            <Paper variant="elevation" sx={{ my: { xs: 3, md: 6 }, p: { xs: 1, md: 1 } }}>
+        {/* <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square> */}
           <Box
             sx={{
               my: 8,
-              mx: 4,
+              mx: 10,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -63,8 +70,10 @@ export default function SignIn() {
                 </NavLink>
               </Typography>
             </Box>
-        </Grid>
-      </Grid>
+       {/* </Grid>*/}
+        </Paper>
+        </Container>
+         </Grid>
 
   );
 }

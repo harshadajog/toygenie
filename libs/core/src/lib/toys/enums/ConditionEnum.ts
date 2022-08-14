@@ -12,7 +12,7 @@ export enum ConditionEnum {
 registerEnumType(ConditionEnum, {
     name: "ConditionEnum", // this one is mandatory
     description: "Condition values for toys", // this one is optional
-  });
+});
 
 /*
 New:

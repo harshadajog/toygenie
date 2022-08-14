@@ -9,14 +9,23 @@ type Toy {
   category: String!
   listPrice: Float!
   condition: ConditionEnum!
-  published: Boolean!
   author: Float!
+  saleStatus: ToyStatusEnum!
 }
 
 """Condition values for toys"""
 enum ConditionEnum {
   NEW
   USED
+}
+
+"""Sale status for the toy"""
+enum ToyStatusEnum {
+  ACTIVE
+  PENDING
+  DISAPPROVED
+  EXPIRED
+  SOLD
 }
 
 """user """
@@ -28,6 +37,22 @@ type User {
   roles: String!
 }
 
+type Messaging {
+  id: ID!
+  parent_message_id: Float!
+  subject: String!
+  messageBody: String!
+  creator_id: Float!
+  recipient_id: Float!
+  created_date: DateTime!
+  is_read: Boolean!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type LoginResponse {
   access_token: String!
   user: User!
@@ -36,17 +61,24 @@ type LoginResponse {
 type Query {
   uptime: Float!
   toys: [Toy!]!
-  publishedToys(published: Boolean!): [Toy!]!
-  toysByAuthor(author: Float!): [Toy!]!
+  findAllByStatus(saleStatus: ToyStatusEnum!): [Toy!]!
+  findAllByAuthor(author: Float!): [Toy!]!
   toy(id: Int!): Toy!
   users: [User!]!
   user(email_address: String!): User!
+  userById(id: Float!): User!
+  messages: [Messaging!]!
+  findMessagesReceivedByUser(recepient: Float!): [Messaging!]!
+  unreadMessages(recepient: Float!): [Messaging!]!
+  messaging(id: Int!): Messaging!
 }
 
 type Mutation {
   createToy(createToyInput: CreateToyInput!): Toy!
   updateToy(updateToyInput: UpdateToyInput!): Toy!
   removeToy(id: Int!): Toy!
+  createMessage(createMessagingInput: CreateMessagingInput!): Messaging!
+  removeMessaging(id: Int!): Messaging!
   login(loginUserInput: LoginUserInput!): LoginResponse!
   localSignup(createUserInput: CreateUserInput!): LoginResponse!
 }
@@ -57,8 +89,8 @@ input CreateToyInput {
   category: String!
   listPrice: Float!
   condition: ConditionEnum!
-  published: Boolean = true
   author: Float!
+  saleStatus: ToyStatusEnum!
 }
 
 input UpdateToyInput {
@@ -67,9 +99,19 @@ input UpdateToyInput {
   category: String!
   listPrice: Float!
   condition: ConditionEnum!
-  published: Boolean = true
   author: Float!
+  saleStatus: ToyStatusEnum!
   id: ID!
+}
+
+input CreateMessagingInput {
+  parent_message_id: Float!
+  subject: String!
+  messageBody: String!
+  creator_id: Float!
+  recipient_id: Float!
+  created_date: DateTime!
+  is_read: Boolean!
 }
 
 input LoginUserInput {
