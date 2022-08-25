@@ -22,6 +22,23 @@ type Messaging {
   is_read: Boolean!
 }
 
+type ChatMessage {
+  subject: String!
+  messageBody: String!
+  creator_id: Float!
+  recipient_id: Float!
+  created_date: DateTime!
+  is_read: Boolean!
+}
+
+type Conversation {
+  id: ID!
+  user_id1: Float!
+  user_id2: Float!
+  created_at: DateTime!
+  messages: [ChatMessage!]!
+}
+
 query toys {
   toys{
     id
@@ -69,15 +86,26 @@ query findUserById ($id: Float!) {
   }
 }
 
-query findUnreadMessagesReceivedByUser($recepient: Float!)  {
+query  findunreadMessagesForUser($recepient: Float!)  {
   unreadMessages(recepient: $recepient){
-    id
-    parent_message_id
     subject
     messageBody
     creator_id
     recipient_id
     is_read
+  }
+}
+
+query  findToysForSaleExcludingCurrentUser($saleStatus: ToyStatusEnum!, $userid: Float!)  {
+  findToysForSaleExcludingCurrentUser(saleStatus: $saleStatus, userid: $userid, ){
+    id
+    title
+    description
+    category
+    listPrice
+    condition
+    author
+    saleStatus
   }
 }
 
@@ -118,25 +146,36 @@ mutation createToy($input: CreateToyInput!){
   }
   }
 
+  mutation createConversation($c: CreateConversationInput!){
+  createConversation(createConversationInput: $c) {
+		id
+    user_id1
+    user_id2
+    created_at
+    messages{
+      subject
+      messageBody
+      is_read
+    }
+  }
+}
+
+mutation updateConversation($u: UpdateConversationInput!)  {
+  updateConversation(updateConversationInput: $u){
+    id
+    messages{
+      subject
+      messageBody
+    }
+  }
+}
+
   mutation removeToy($id: Int!) {
   removeToy(id: $id) {
       id,
     author
   }
 }
-
-mutation createmessage($input: CreateMessagingInput!){
-  createMessage(createMessagingInput: $input) {
-		id
-    parent_message_id
-    subject
-    messageBody
-    created_date
-    creator_id
-   	recipient_id
-    is_read
-  }
-  }
 
 input LoginUserInput {
   email_address: String!

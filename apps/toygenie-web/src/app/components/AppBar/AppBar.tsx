@@ -18,7 +18,7 @@ import {AppBar, Box, Badge } from '@mui/material';
 import IUser from '../../interfaces/IUser';
 import LoginContext from '../../context/LoginContext';
 
-const pages = [{display: 'Dashboard', name: 'dashboard'}, {display: 'My Listings', name: 'my-listings'}, { display: 'List an Item', name: 'create-listing'}];
+const pages = [{display: 'Dashboard', name: 'dashboard'}, {display: 'My Listings', name: 'my-listings'}, { display: 'List an Item', name: 'create-listing'}, { display: 'Messages', name: 'inbox'}];
 const settings = ['Profile', 'History', 'Logout'];
 
 const MUIAppBar = () => {

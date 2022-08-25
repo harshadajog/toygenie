@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { gql, useMutation } from "@apollo/client";
-import { GET_TOYS_FOR_SALE } from '../../graphql/graphql';
+import { GET_TOYS_BY_AUTHOR, GET_TOYS_FOR_SALE } from '../../graphql/graphql';
 import { Box, Button, Container, CssBaseline, FormControl, FormControlLabel, FormHelperText, FormLabel, Grid, InputLabel, MenuItem, Paper, Radio, RadioGroup, Select, TextField, Typography } from '@mui/material';
 
 // import {BrandEnum, ConditionEnum, AgeRangeEnum, useCreateToyMutation, usePublishedToysQuery } from '@toygenie/graphql-access';
@@ -59,21 +59,6 @@ export function CreateToy() {
 
         event.preventDefault();
         console.log("Inside create toy handle submit", formValues);
-        // addToy({
-        //     variables: {
-        //     input: {
-        //       title: formValues.title,
-        //       description: formValues.description,
-        //       listPrice: formValues.listPrice,
-        //       condition: formValues.condition,
-        //       // brand: formValues.brand,
-        //       // ageRange: formValues.ageRange,
-        //       category: initialValues.category,
-        //       author: user.id,
-        //       published: true
-        //     }
-        //   }
-        // })
         createToyMutation ({
           variables: {
             input: {
@@ -116,6 +101,22 @@ export function CreateToy() {
               },
               data: {findAllByStatus: [newToy, ...existingToys]}
               });
+
+              const getToysByAuthor: any = cache.readQuery({
+                query: GET_TOYS_BY_AUTHOR,
+                variables:{
+                  author: user.id
+                },
+              })  
+              console.log("Toys by author: ", getToysByAuthor);
+              const toysByAuthor = getToysByAuthor? getToysByAuthor.findAllByAuthor: [];
+              cache.writeQuery({
+                query: GET_TOYS_BY_AUTHOR,
+                variables:{
+                  author: user.id
+                },
+                data: {findAllByAuthor: [newToy, ...toysByAuthor]}
+                });
           }
         })
       };

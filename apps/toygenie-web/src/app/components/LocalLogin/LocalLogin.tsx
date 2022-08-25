@@ -68,6 +68,7 @@ export function LocalLogin({}) {
       setLoggedInUser(user);
       window.localStorage.setItem("USER", JSON.stringify(user));
      loginContext.setSignedIn(true);
+     loginContext.setLoggedUserId(user.id);
     }
   }, [loginData, loginError]);
 

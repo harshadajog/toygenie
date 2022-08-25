@@ -19,6 +19,7 @@ import ProtectedRoute, { ProtectedRouteProps } from './components/ProtectedRoute
 
 import ToyDetail from './components/Toy/ToyDetail';
 import { GET_UNREAD_BY_RECEPIENT } from './graphql/graphql';
+import Messenger from './components/Messaging/Messenger';
 
 const client = new ApolloClient({
   uri: 'http://localhost:3000/graphql',
@@ -36,6 +37,10 @@ const darkTheme = createTheme({
   palette: {
     mode: 'dark'
   }});
+  const lightTheme = createTheme({
+    palette: {
+      mode: 'light'
+    }});
 //     background: {
 //       default: '#FFFFF0' //ivory,
 //       //paper: '#b6c48e'
@@ -66,6 +71,7 @@ export function App() {
   const [signedIn, setSignedIn] = useState<boolean>(initializeSignIn);
   const [user, setUser] = useState(null);
   const [unread, setUnread] = useState(0);
+  const [loggedUserId, setLoggedUserId] = useState(-1);
 
   useEffect(() => {
     const loggedInUser = localStorage.getItem("USER");
@@ -73,6 +79,7 @@ export function App() {
       const foundUser = JSON.parse(loggedInUser);
       setUser(foundUser);
       setSignedIn(true);
+      setLoggedUserId(foundUser.id);
     }
   }, []);
 
@@ -83,9 +90,9 @@ export function App() {
 
   return (
     <>
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={lightTheme}>
     <ApolloProvider client={client}>
-      <LoginContext.Provider value={{ signedIn, setSignedIn, unread, setUnread }}>
+      <LoginContext.Provider value={{ signedIn, setSignedIn, unread, setUnread, loggedUserId, setLoggedUserId }}>
       <div className="app">
         <Layout>
       <Routes>
@@ -134,6 +141,15 @@ export function App() {
             <ProtectedRoute
               {...defaultProtectedRouteProps}
               outlet={<ToyDetail />}
+            />
+          }
+        />
+        <Route
+          path="inbox"
+          element={
+            <ProtectedRoute
+              {...defaultProtectedRouteProps}
+              outlet={<Messenger />}
             />
           }
         />

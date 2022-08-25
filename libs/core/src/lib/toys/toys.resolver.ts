@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql'
+import { Resolver, Query, Mutation, Args, Int, Float } from '@nestjs/graphql'
 import { ToysService } from './toys.service'
 import { Toy } from './entities/toy.entity'
 import { CreateToyInput } from './dto/create-toy.input'
@@ -31,6 +31,14 @@ export class ToysResolver {
   }
 
   @Query(returns => [Toy])
+  findToysForSaleExcludingCurrentUser(
+    @Args('saleStatus', { type: () => ToyStatusEnum }) saleStatus: ToyStatusEnum,
+    @Args('userid', { type: () => Float }) userid: number)
+   {
+    return this.toysService.findToysForSaleExcludingCurrentUser(saleStatus, userid);
+  }
+
+  @Query(returns => [Toy])
   findAllByAuthor(@Args('author') author: number) {
     return this.toysService.findAllByAuthor(author);
   }
@@ -41,8 +49,9 @@ export class ToysResolver {
   }
 
   @Mutation(() => Toy)
-  updateToy(@Args('updateToyInput') updateToyInput: UpdateToyInput) {
-    return this.toysService.update(updateToyInput.id, updateToyInput)
+  updateSaleStatus(@Args('updateToyInput') updateToyInput: UpdateToyInput,
+                  @Args('id') id: number ) {
+    return this.toysService.updateSaleStatus(id, updateToyInput)
   }
 
   @Mutation(() => Toy)

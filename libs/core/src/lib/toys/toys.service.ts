@@ -35,6 +35,10 @@ export class ToysService {
     return this.toys.filter((toy) => {return toy.saleStatus == saleStatus});
   }
 
+ async findToysForSaleExcludingCurrentUser(saleStatus, userid) {
+  return this.toys.filter((toy) => {return (toy.saleStatus == saleStatus && toy.author != userid)});
+ }
+
   async findAllByAuthor(author: number) {
     return this.toys.filter((toy) => {return toy.author == author});
   }
@@ -46,8 +50,22 @@ export class ToysService {
     return toy;  
   }
 
-  update(id: number, updateToyInput: UpdateToyInput) {
-    return `This action updates a #${id} toy`
+  updateSaleStatus(id: number, updateToyInput: UpdateToyInput) {
+    console.log("[TOY SERVICE UPDATE TOY STATUS]:", updateToyInput.id, updateToyInput.saleStatus);
+    let updatedToys = this.toys.map(toy => {
+      if (toy.id === id) {
+        console.log("hey");
+        return {...toy, saleStatus: updateToyInput.saleStatus};
+      }
+      return toy;
+    });
+    this.toys = [...updatedToys];
+    writeFileSync(__dirname + '/assets/toys-data.json', JSON.stringify(this.toys));
+    
+    let toy = this.toys.find((toy) => {
+      return toy.id === id;
+    })
+    return toy;
   }
 
   async remove(id: number) {

@@ -53,6 +53,23 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type ChatMessage {
+  subject: String!
+  messageBody: String!
+  creator_id: Float!
+  recipient_id: Float!
+  created_date: DateTime!
+  is_read: Boolean!
+}
+
+type Conversation {
+  id: ID!
+  user_id1: Float!
+  user_id2: Float!
+  created_at: DateTime!
+  messages: [ChatMessage!]!
+}
+
 type LoginResponse {
   access_token: String!
   user: User!
@@ -62,22 +79,25 @@ type Query {
   uptime: Float!
   toys: [Toy!]!
   findAllByStatus(saleStatus: ToyStatusEnum!): [Toy!]!
+  findToysForSaleExcludingCurrentUser(saleStatus: ToyStatusEnum!, userid: Float!): [Toy!]!
   findAllByAuthor(author: Float!): [Toy!]!
   toy(id: Int!): Toy!
   users: [User!]!
   user(email_address: String!): User!
   userById(id: Float!): User!
   messages: [Messaging!]!
-  findMessagesReceivedByUser(recepient: Float!): [Messaging!]!
-  unreadMessages(recepient: Float!): [Messaging!]!
+  findConversationId(userid1: Float!, userid2: Float!): Int!
+  findConversation(userid1: Float!, userid2: Float!): Conversation!
+  unreadMessages(recepient: Float!): [ChatMessage!]!
   messaging(id: Int!): Messaging!
 }
 
 type Mutation {
   createToy(createToyInput: CreateToyInput!): Toy!
-  updateToy(updateToyInput: UpdateToyInput!): Toy!
+  updateSaleStatus(updateToyInput: UpdateToyInput!, id: Float!): Toy!
   removeToy(id: Int!): Toy!
-  createMessage(createMessagingInput: CreateMessagingInput!): Messaging!
+  createConversation(createConversationInput: CreateConversationInput!): Conversation!
+  updateConversation(updateConversationInput: UpdateConversationInput!): Conversation!
   removeMessaging(id: Int!): Messaging!
   login(loginUserInput: LoginUserInput!): LoginResponse!
   localSignup(createUserInput: CreateUserInput!): LoginResponse!
@@ -94,24 +114,38 @@ input CreateToyInput {
 }
 
 input UpdateToyInput {
-  title: String!
-  description: String!
-  category: String!
-  listPrice: Float!
-  condition: ConditionEnum!
-  author: Float!
+  title: String
+  description: String
+  category: String
+  listPrice: Float
+  condition: ConditionEnum
+  author: Float
   saleStatus: ToyStatusEnum!
   id: ID!
 }
 
-input CreateMessagingInput {
-  parent_message_id: Float!
+input CreateConversationInput {
+  user_id1: Float!
+  user_id2: Float!
+  created_at: DateTime!
+  messages: [CreateChatMessageInput!]!
+}
+
+input CreateChatMessageInput {
   subject: String!
   messageBody: String!
   creator_id: Float!
   recipient_id: Float!
   created_date: DateTime!
   is_read: Boolean!
+}
+
+input UpdateConversationInput {
+  user_id1: Float
+  user_id2: Float
+  created_at: DateTime
+  messages: [CreateChatMessageInput!]!
+  id: Int!
 }
 
 input LoginUserInput {

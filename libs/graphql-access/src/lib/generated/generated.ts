@@ -22,20 +22,45 @@ export enum AuthEnum {
   Local = 'LOCAL'
 }
 
+export type ChatMessage = {
+  __typename?: 'ChatMessage';
+  created_date: Scalars['DateTime'];
+  creator_id: Scalars['Float'];
+  is_read: Scalars['Boolean'];
+  messageBody: Scalars['String'];
+  recipient_id: Scalars['Float'];
+  subject: Scalars['String'];
+};
+
 /** Condition values for toys */
 export enum ConditionEnum {
   New = 'NEW',
   Used = 'USED'
 }
 
-export type CreateMessagingInput = {
+export type Conversation = {
+  __typename?: 'Conversation';
+  created_at: Scalars['DateTime'];
+  id: Scalars['ID'];
+  messages: Array<ChatMessage>;
+  user_id1: Scalars['Float'];
+  user_id2: Scalars['Float'];
+};
+
+export type CreateChatMessageInput = {
   created_date: Scalars['DateTime'];
   creator_id: Scalars['Float'];
   is_read: Scalars['Boolean'];
   messageBody: Scalars['String'];
-  parent_message_id: Scalars['Float'];
   recipient_id: Scalars['Float'];
   subject: Scalars['String'];
+};
+
+export type CreateConversationInput = {
+  created_at: Scalars['DateTime'];
+  messages: Array<CreateChatMessageInput>;
+  user_id1: Scalars['Float'];
+  user_id2: Scalars['Float'];
 };
 
 export type CreateToyInput = {
@@ -82,18 +107,19 @@ export type Messaging = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createMessage: Messaging;
+  createConversation: Conversation;
   createToy: Toy;
   localSignup: LoginResponse;
   login: LoginResponse;
   removeMessaging: Messaging;
   removeToy: Toy;
+  updateConversation: Conversation;
   updateToy: Toy;
 };
 
 
-export type MutationCreateMessageArgs = {
-  createMessagingInput: CreateMessagingInput;
+export type MutationCreateConversationArgs = {
+  createConversationInput: CreateConversationInput;
 };
 
 
@@ -122,6 +148,11 @@ export type MutationRemoveToyArgs = {
 };
 
 
+export type MutationUpdateConversationArgs = {
+  updateConversationInput: UpdateConversationInput;
+};
+
+
 export type MutationUpdateToyArgs = {
   updateToyInput: UpdateToyInput;
 };
@@ -130,12 +161,14 @@ export type Query = {
   __typename?: 'Query';
   findAllByAuthor: Array<Toy>;
   findAllByStatus: Array<Toy>;
-  findMessagesReceivedByUser: Array<Messaging>;
+  findConversation: Conversation;
+  findConversationId: Scalars['Int'];
+  findToysForSaleExcludingCurrentUser: Array<Toy>;
   messages: Array<Messaging>;
   messaging: Messaging;
   toy: Toy;
   toys: Array<Toy>;
-  unreadMessages: Array<Messaging>;
+  unreadMessages: Array<ChatMessage>;
   uptime: Scalars['Float'];
   user: User;
   userById: User;
@@ -153,8 +186,21 @@ export type QueryFindAllByStatusArgs = {
 };
 
 
-export type QueryFindMessagesReceivedByUserArgs = {
-  recepient: Scalars['Float'];
+export type QueryFindConversationArgs = {
+  userid1: Scalars['Float'];
+  userid2: Scalars['Float'];
+};
+
+
+export type QueryFindConversationIdArgs = {
+  userid1: Scalars['Float'];
+  userid2: Scalars['Float'];
+};
+
+
+export type QueryFindToysForSaleExcludingCurrentUserArgs = {
+  saleStatus: ToyStatusEnum;
+  userid: Scalars['Float'];
 };
 
 
@@ -203,6 +249,14 @@ export enum ToyStatusEnum {
   Sold = 'SOLD'
 }
 
+export type UpdateConversationInput = {
+  created_at?: InputMaybe<Scalars['DateTime']>;
+  id: Scalars['Int'];
+  messages: Array<CreateChatMessageInput>;
+  user_id1?: InputMaybe<Scalars['Float']>;
+  user_id2?: InputMaybe<Scalars['Float']>;
+};
+
 export type UpdateToyInput = {
   author: Scalars['Float'];
   category: Scalars['String'];
@@ -250,12 +304,20 @@ export type FindUserByIdQueryVariables = Exact<{
 
 export type FindUserByIdQuery = { __typename?: 'Query', userById: { __typename?: 'User', first_name: string, last_name: string, email_address: string } };
 
-export type FindUnreadMessagesReceivedByUserQueryVariables = Exact<{
+export type FindunreadMessagesForUserQueryVariables = Exact<{
   recepient: Scalars['Float'];
 }>;
 
 
-export type FindUnreadMessagesReceivedByUserQuery = { __typename?: 'Query', unreadMessages: Array<{ __typename?: 'Messaging', id: string, parent_message_id: number, subject: string, messageBody: string, creator_id: number, recipient_id: number, is_read: boolean }> };
+export type FindunreadMessagesForUserQuery = { __typename?: 'Query', unreadMessages: Array<{ __typename?: 'ChatMessage', subject: string, messageBody: string, creator_id: number, recipient_id: number, is_read: boolean }> };
+
+export type FindToysForSaleExcludingCurrentUserQueryVariables = Exact<{
+  saleStatus: ToyStatusEnum;
+  userid: Scalars['Float'];
+}>;
+
+
+export type FindToysForSaleExcludingCurrentUserQuery = { __typename?: 'Query', findToysForSaleExcludingCurrentUser: Array<{ __typename?: 'Toy', id: string, title: string, description: string, category: string, listPrice: number, condition: ConditionEnum, author: number, saleStatus: ToyStatusEnum }> };
 
 export type LocalSignupMutationVariables = Exact<{
   input: CreateUserInput;
@@ -278,19 +340,26 @@ export type CreateToyMutationVariables = Exact<{
 
 export type CreateToyMutation = { __typename?: 'Mutation', createToy: { __typename?: 'Toy', id: string, title: string, description: string, category: string, listPrice: number, condition: ConditionEnum, author: number, saleStatus: ToyStatusEnum } };
 
+export type CreateConversationMutationVariables = Exact<{
+  c: CreateConversationInput;
+}>;
+
+
+export type CreateConversationMutation = { __typename?: 'Mutation', createConversation: { __typename?: 'Conversation', id: string, user_id1: number, user_id2: number, created_at: any, messages: Array<{ __typename?: 'ChatMessage', subject: string, messageBody: string, is_read: boolean }> } };
+
+export type UpdateConversationMutationVariables = Exact<{
+  u: UpdateConversationInput;
+}>;
+
+
+export type UpdateConversationMutation = { __typename?: 'Mutation', updateConversation: { __typename?: 'Conversation', id: string, messages: Array<{ __typename?: 'ChatMessage', subject: string, messageBody: string }> } };
+
 export type RemoveToyMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
 export type RemoveToyMutation = { __typename?: 'Mutation', removeToy: { __typename?: 'Toy', id: string, author: number } };
-
-export type CreatemessageMutationVariables = Exact<{
-  input: CreateMessagingInput;
-}>;
-
-
-export type CreatemessageMutation = { __typename?: 'Mutation', createMessage: { __typename?: 'Messaging', id: string, parent_message_id: number, subject: string, messageBody: string, created_date: any, creator_id: number, recipient_id: number, is_read: boolean } };
 
 
 export const ToysDocument = gql`
@@ -454,11 +523,9 @@ export function useFindUserByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type FindUserByIdQueryHookResult = ReturnType<typeof useFindUserByIdQuery>;
 export type FindUserByIdLazyQueryHookResult = ReturnType<typeof useFindUserByIdLazyQuery>;
 export type FindUserByIdQueryResult = Apollo.QueryResult<FindUserByIdQuery, FindUserByIdQueryVariables>;
-export const FindUnreadMessagesReceivedByUserDocument = gql`
-    query findUnreadMessagesReceivedByUser($recepient: Float!) {
+export const FindunreadMessagesForUserDocument = gql`
+    query findunreadMessagesForUser($recepient: Float!) {
   unreadMessages(recepient: $recepient) {
-    id
-    parent_message_id
     subject
     messageBody
     creator_id
@@ -469,32 +536,75 @@ export const FindUnreadMessagesReceivedByUserDocument = gql`
     `;
 
 /**
- * __useFindUnreadMessagesReceivedByUserQuery__
+ * __useFindunreadMessagesForUserQuery__
  *
- * To run a query within a React component, call `useFindUnreadMessagesReceivedByUserQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindUnreadMessagesReceivedByUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useFindunreadMessagesForUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindunreadMessagesForUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useFindUnreadMessagesReceivedByUserQuery({
+ * const { data, loading, error } = useFindunreadMessagesForUserQuery({
  *   variables: {
  *      recepient: // value for 'recepient'
  *   },
  * });
  */
-export function useFindUnreadMessagesReceivedByUserQuery(baseOptions: Apollo.QueryHookOptions<FindUnreadMessagesReceivedByUserQuery, FindUnreadMessagesReceivedByUserQueryVariables>) {
+export function useFindunreadMessagesForUserQuery(baseOptions: Apollo.QueryHookOptions<FindunreadMessagesForUserQuery, FindunreadMessagesForUserQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<FindUnreadMessagesReceivedByUserQuery, FindUnreadMessagesReceivedByUserQueryVariables>(FindUnreadMessagesReceivedByUserDocument, options);
+        return Apollo.useQuery<FindunreadMessagesForUserQuery, FindunreadMessagesForUserQueryVariables>(FindunreadMessagesForUserDocument, options);
       }
-export function useFindUnreadMessagesReceivedByUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindUnreadMessagesReceivedByUserQuery, FindUnreadMessagesReceivedByUserQueryVariables>) {
+export function useFindunreadMessagesForUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindunreadMessagesForUserQuery, FindunreadMessagesForUserQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<FindUnreadMessagesReceivedByUserQuery, FindUnreadMessagesReceivedByUserQueryVariables>(FindUnreadMessagesReceivedByUserDocument, options);
+          return Apollo.useLazyQuery<FindunreadMessagesForUserQuery, FindunreadMessagesForUserQueryVariables>(FindunreadMessagesForUserDocument, options);
         }
-export type FindUnreadMessagesReceivedByUserQueryHookResult = ReturnType<typeof useFindUnreadMessagesReceivedByUserQuery>;
-export type FindUnreadMessagesReceivedByUserLazyQueryHookResult = ReturnType<typeof useFindUnreadMessagesReceivedByUserLazyQuery>;
-export type FindUnreadMessagesReceivedByUserQueryResult = Apollo.QueryResult<FindUnreadMessagesReceivedByUserQuery, FindUnreadMessagesReceivedByUserQueryVariables>;
+export type FindunreadMessagesForUserQueryHookResult = ReturnType<typeof useFindunreadMessagesForUserQuery>;
+export type FindunreadMessagesForUserLazyQueryHookResult = ReturnType<typeof useFindunreadMessagesForUserLazyQuery>;
+export type FindunreadMessagesForUserQueryResult = Apollo.QueryResult<FindunreadMessagesForUserQuery, FindunreadMessagesForUserQueryVariables>;
+export const FindToysForSaleExcludingCurrentUserDocument = gql`
+    query findToysForSaleExcludingCurrentUser($saleStatus: ToyStatusEnum!, $userid: Float!) {
+  findToysForSaleExcludingCurrentUser(saleStatus: $saleStatus, userid: $userid) {
+    id
+    title
+    description
+    category
+    listPrice
+    condition
+    author
+    saleStatus
+  }
+}
+    `;
+
+/**
+ * __useFindToysForSaleExcludingCurrentUserQuery__
+ *
+ * To run a query within a React component, call `useFindToysForSaleExcludingCurrentUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindToysForSaleExcludingCurrentUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindToysForSaleExcludingCurrentUserQuery({
+ *   variables: {
+ *      saleStatus: // value for 'saleStatus'
+ *      userid: // value for 'userid'
+ *   },
+ * });
+ */
+export function useFindToysForSaleExcludingCurrentUserQuery(baseOptions: Apollo.QueryHookOptions<FindToysForSaleExcludingCurrentUserQuery, FindToysForSaleExcludingCurrentUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindToysForSaleExcludingCurrentUserQuery, FindToysForSaleExcludingCurrentUserQueryVariables>(FindToysForSaleExcludingCurrentUserDocument, options);
+      }
+export function useFindToysForSaleExcludingCurrentUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindToysForSaleExcludingCurrentUserQuery, FindToysForSaleExcludingCurrentUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindToysForSaleExcludingCurrentUserQuery, FindToysForSaleExcludingCurrentUserQueryVariables>(FindToysForSaleExcludingCurrentUserDocument, options);
+        }
+export type FindToysForSaleExcludingCurrentUserQueryHookResult = ReturnType<typeof useFindToysForSaleExcludingCurrentUserQuery>;
+export type FindToysForSaleExcludingCurrentUserLazyQueryHookResult = ReturnType<typeof useFindToysForSaleExcludingCurrentUserLazyQuery>;
+export type FindToysForSaleExcludingCurrentUserQueryResult = Apollo.QueryResult<FindToysForSaleExcludingCurrentUserQuery, FindToysForSaleExcludingCurrentUserQueryVariables>;
 export const LocalSignupDocument = gql`
     mutation localSignup($input: CreateUserInput!) {
   localSignup(createUserInput: $input) {
@@ -613,6 +723,84 @@ export function useCreateToyMutation(baseOptions?: Apollo.MutationHookOptions<Cr
 export type CreateToyMutationHookResult = ReturnType<typeof useCreateToyMutation>;
 export type CreateToyMutationResult = Apollo.MutationResult<CreateToyMutation>;
 export type CreateToyMutationOptions = Apollo.BaseMutationOptions<CreateToyMutation, CreateToyMutationVariables>;
+export const CreateConversationDocument = gql`
+    mutation createConversation($c: CreateConversationInput!) {
+  createConversation(createConversationInput: $c) {
+    id
+    user_id1
+    user_id2
+    created_at
+    messages {
+      subject
+      messageBody
+      is_read
+    }
+  }
+}
+    `;
+export type CreateConversationMutationFn = Apollo.MutationFunction<CreateConversationMutation, CreateConversationMutationVariables>;
+
+/**
+ * __useCreateConversationMutation__
+ *
+ * To run a mutation, you first call `useCreateConversationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateConversationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createConversationMutation, { data, loading, error }] = useCreateConversationMutation({
+ *   variables: {
+ *      c: // value for 'c'
+ *   },
+ * });
+ */
+export function useCreateConversationMutation(baseOptions?: Apollo.MutationHookOptions<CreateConversationMutation, CreateConversationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateConversationMutation, CreateConversationMutationVariables>(CreateConversationDocument, options);
+      }
+export type CreateConversationMutationHookResult = ReturnType<typeof useCreateConversationMutation>;
+export type CreateConversationMutationResult = Apollo.MutationResult<CreateConversationMutation>;
+export type CreateConversationMutationOptions = Apollo.BaseMutationOptions<CreateConversationMutation, CreateConversationMutationVariables>;
+export const UpdateConversationDocument = gql`
+    mutation updateConversation($u: UpdateConversationInput!) {
+  updateConversation(updateConversationInput: $u) {
+    id
+    messages {
+      subject
+      messageBody
+    }
+  }
+}
+    `;
+export type UpdateConversationMutationFn = Apollo.MutationFunction<UpdateConversationMutation, UpdateConversationMutationVariables>;
+
+/**
+ * __useUpdateConversationMutation__
+ *
+ * To run a mutation, you first call `useUpdateConversationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateConversationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateConversationMutation, { data, loading, error }] = useUpdateConversationMutation({
+ *   variables: {
+ *      u: // value for 'u'
+ *   },
+ * });
+ */
+export function useUpdateConversationMutation(baseOptions?: Apollo.MutationHookOptions<UpdateConversationMutation, UpdateConversationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateConversationMutation, UpdateConversationMutationVariables>(UpdateConversationDocument, options);
+      }
+export type UpdateConversationMutationHookResult = ReturnType<typeof useUpdateConversationMutation>;
+export type UpdateConversationMutationResult = Apollo.MutationResult<UpdateConversationMutation>;
+export type UpdateConversationMutationOptions = Apollo.BaseMutationOptions<UpdateConversationMutation, UpdateConversationMutationVariables>;
 export const RemoveToyDocument = gql`
     mutation removeToy($id: Int!) {
   removeToy(id: $id) {
@@ -647,43 +835,3 @@ export function useRemoveToyMutation(baseOptions?: Apollo.MutationHookOptions<Re
 export type RemoveToyMutationHookResult = ReturnType<typeof useRemoveToyMutation>;
 export type RemoveToyMutationResult = Apollo.MutationResult<RemoveToyMutation>;
 export type RemoveToyMutationOptions = Apollo.BaseMutationOptions<RemoveToyMutation, RemoveToyMutationVariables>;
-export const CreatemessageDocument = gql`
-    mutation createmessage($input: CreateMessagingInput!) {
-  createMessage(createMessagingInput: $input) {
-    id
-    parent_message_id
-    subject
-    messageBody
-    created_date
-    creator_id
-    recipient_id
-    is_read
-  }
-}
-    `;
-export type CreatemessageMutationFn = Apollo.MutationFunction<CreatemessageMutation, CreatemessageMutationVariables>;
-
-/**
- * __useCreatemessageMutation__
- *
- * To run a mutation, you first call `useCreatemessageMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreatemessageMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createmessageMutation, { data, loading, error }] = useCreatemessageMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useCreatemessageMutation(baseOptions?: Apollo.MutationHookOptions<CreatemessageMutation, CreatemessageMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreatemessageMutation, CreatemessageMutationVariables>(CreatemessageDocument, options);
-      }
-export type CreatemessageMutationHookResult = ReturnType<typeof useCreatemessageMutation>;
-export type CreatemessageMutationResult = Apollo.MutationResult<CreatemessageMutation>;
-export type CreatemessageMutationOptions = Apollo.BaseMutationOptions<CreatemessageMutation, CreatemessageMutationVariables>;

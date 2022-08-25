@@ -3,7 +3,7 @@ import { Fragment, useEffect, useState } from "react";
 import { toast } from 'react-toastify';
 import { gql, useQuery, useLazyQuery, useMutation } from "@apollo/client";
 import Button from '@mui/material/Button';
-import { Toy, useCreatemessageMutation, User } from "@toygenie/graphql-access";
+import { Toy, useCreateConversationMutation, User } from "@toygenie/graphql-access";
 import { GET_USER_BY_ID} from '../../graphql/graphql';
 
 const style = {
@@ -22,6 +22,7 @@ const style = {
 
 export function SendMessageModal({toy}:{toy: Toy}) {
 
+  let sellerData={};
   const [getUser, { data: userData, loading: userLoading, error: userError }] = useLazyQuery(GET_USER_BY_ID, {
     variables:{
         id: toy.author
@@ -32,7 +33,8 @@ export function SendMessageModal({toy}:{toy: Toy}) {
     const [message, setMessage] = useState('');
     let val = window.localStorage.getItem("USER")!;
     const [user, setUser] = useState<User>(JSON.parse(val));
-    const [seller, setSeller] = useState<any>({});
+    const [seller, setSeller] = useState<any>();
+    
 
     const handleOpen = () => {
       setOpen(true);
@@ -44,28 +46,53 @@ export function SendMessageModal({toy}:{toy: Toy}) {
       setMessage('');
     };
 
-    const [createmessageMutation, { data: messageData, loading: messageLoading, error: messageError }] = useCreatemessageMutation();
+    const [createConversationMutation, { data: convData, loading: convLoading, error: convError }] = useCreateConversationMutation();
+
+    // const handleSend = () => {
+    //   console.log(message); 
+    //   if(message){
+    //     console.log("seller id:", seller);
+    //     createmessageMutation({
+    //       variables: {
+    //         input: {
+    //           parent_message_id: 0,
+    //           subject: `Interested in ${toy.title}` ,
+    //           messageBody: message,
+    //           created_date: "2022-08-09T11:34:21Z",
+    //           creator_id: user.id,
+    //           recipient_id: seller.id,
+    //           is_read: false
+    //         }
+    //       }
+    //     });
+    //   }
+    //   setOpen(false);
+    // };
 
     const handleSend = () => {
       console.log(message); 
       if(message){
-        console.log("seller id:", seller);
-        createmessageMutation({
+        console.log("seller id:", sellerData);
+        createConversationMutation({
           variables: {
-            input: {
-              parent_message_id: 0,
-              subject: `Interested in ${toy.title}` ,
-              messageBody: message,
-              created_date: "2022-08-09T11:34:21Z",
-              creator_id: user.id,
-              recipient_id: seller.id,
-              is_read: false
+            c: {
+              user_id1: user.id,
+              user_id2: seller.id,
+              created_at: "2022-09-08T08:05:01.147Z",
+              messages:[{
+                subject: `Interested in ${toy.title}` ,
+                messageBody: message,
+                created_date: "2022-08-09T11:34:21Z",
+                creator_id: user.id,
+                recipient_id: seller.id,
+                is_read: false
+              }]
             }
           }
         });
       }
       setOpen(false);
-    };
+    }
 
     useEffect(() => {
       if(userError)
@@ -77,8 +104,8 @@ export function SendMessageModal({toy}:{toy: Toy}) {
     }, [userData, userError])
 
     useEffect(() => {
-      if(messageError){
-        console.log("CREATE MESSAGE MUTATION", messageError);
+      if(convError){
+        console.log("CREATE CONVERSATION MUTATION", convError);
         toast.error('Message not sent!', {
           position: "top-right",
           autoClose: 3000,
@@ -89,8 +116,8 @@ export function SendMessageModal({toy}:{toy: Toy}) {
           progress: undefined,
           });
       }
-      else if(messageData && messageData.createMessage) {
-      console.log("CREATE MESSAGE MUTATION", messageData);
+      else if(convData && convData.createConversation) {
+      console.log("CREATE CONVERSATION MUTATION", convData);
       toast.success('Message Sent!', {
         position: "top-right",
         autoClose: 3000,
@@ -101,7 +128,7 @@ export function SendMessageModal({toy}:{toy: Toy}) {
         progress: undefined,
         });
       }
-    }, [messageData, messageError])
+    }, [convData, convError])
   
     return (
       <Fragment>
@@ -114,7 +141,7 @@ export function SendMessageModal({toy}:{toy: Toy}) {
           aria-describedby="child-modal-description"
         >
           <Box sx={{ ...style, width: 400 }}>
-            <h2 id="child-modal-title">Message {seller.first_name}</h2>
+            <h2 id="child-modal-title">Message {seller?.first_name}</h2>
             <Box p={0.5} gap={2} borderRadius={16}>
               <Paper elevation={2}>
                 <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
@@ -124,7 +151,7 @@ export function SendMessageModal({toy}:{toy: Toy}) {
                   </ListItemAvatar>
                 <ListItemText style={{ lineHeight: 1, margin: 0 }}
                   primary={toy.title}
-                  secondary={toy.listPrice}
+                  secondary={`$ ${toy.listPrice}`}
                   />   
                 </ListItem>
                 </List>

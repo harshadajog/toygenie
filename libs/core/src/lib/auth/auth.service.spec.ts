@@ -30,7 +30,7 @@ export class AuthService {
 
   async login(user: User) {
     //The payload will be extracted by jwt strategy.
-    console.log("Inside aith service login call");
+    console.log("Inside auth service login call");
     const payload =  {email_address: user.email_address, sub: user.id};
     return {
       access_token: this.jwtService.sign(payload),
