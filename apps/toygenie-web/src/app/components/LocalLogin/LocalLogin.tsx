@@ -34,43 +34,30 @@ export function LocalLogin({}) {
         }
       });
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        console.log(email_address + "  " + password);
-        
-        // Call login graphql
-        loginMutation ({
-          variables: {
-            input: {
-              email_address,
-              password,
-              auth_type
-            }
-          }
-        })
-      };
-
-  // useEffect triggered for loginMutation: either data or error.
-  useEffect(() => {
-    if(loginError){
-     console.log("Inside FE Login: ", loginError.message);
-     setError(loginError.message);
-    }
-    else if (loginData) {
-      let user: IUser = {
-        id: loginData.login.user.id,
-        first_name: loginData.login.user.first_name,
-        last_name: loginData.login.user.last_name,
-        email_address:  loginData.login.user.email_address,
-        roles: 'USER',
-        auth_token: loginData.login.access_token
+    const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      try {
+        const loginData = await loginMutation();
+        console.log(loginData);
+        let user: IUser = {
+          id: loginData.data!.login.user.id,
+          first_name: loginData.data!.login.user.first_name,
+          last_name: loginData.data!.login.user.last_name,
+          email_address:  loginData.data!.login.user.email_address,
+          roles: 'USER',
+          auth_token: loginData.data!.login.access_token
+        }
+        setLoggedInUser(user);
+        window.localStorage.setItem("USER", JSON.stringify(user));
+        loginContext.setSignedIn(true);
+        loginContext.setLoggedUserId(user.id);
       }
-      setLoggedInUser(user);
-      window.localStorage.setItem("USER", JSON.stringify(user));
-     loginContext.setSignedIn(true);
-     loginContext.setLoggedUserId(user.id);
-    }
-  }, [loginData, loginError]);
+      catch(e) {
+         let  myError = JSON.parse(JSON.stringify(e));
+         console.log(myError);
+        setError(myError.graphQLErrors[0].message);
+        }
+}
 
   useEffect(() => {
     if(loggedInUser){
@@ -84,7 +71,7 @@ export function LocalLogin({}) {
   }, [loggedInUser])
 
     useEffect(() => {
-      console.log("message useeffect");
+ 
       if(msgError)
         console.log("Error fetching unread messages: ", msgError);
       else if(msgData && msgData.unreadMessages){

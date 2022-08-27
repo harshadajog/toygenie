@@ -11,22 +11,25 @@ export class AuthService {
   constructor(private usersService: UsersService, private jwtService: JwtService) {}
 
   async validateUser(emailaddress: string, password: string): Promise<any> {
-    console.log("Inside validateuser");
+   
+    console.log("[AUTH SERVICE - VALIDATE USER] ");
     console.log("emailaddress: " + emailaddress + " password: " + password);
-    const user = await this.usersService.findOne(emailaddress);
-    if(!user){
-      throw new Error('User does not exist in the system!');
-    }
-    console.log("[auth service validate user] Returned user: " + user)
-    const valid = await bcrypt.compare(password, user?.password);
+    let user = await this.usersService.findOne(emailaddress);
+    // if(!user){
+    //   throw new Error('User does not exist in the system!');
+    // }
+    if(user){
+      let valid = await bcrypt.compare(password, user?.password);
     
-    if (user && valid) { 
+    if (valid) { 
       const { password, ...result } = user;
       return result;
     }
+  }
 }
   
   async login(user: User) {
+   try{
     //The payload will be extracted by jwt strategy.
     console.log("Inside aith service login call");
     const payload =  {email_address: user.email_address, sub: user.id};
@@ -34,6 +37,9 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
       user: user,
     }
+  }catch(error){
+    throw new Error("User does not exist");
+  }
   }
 
   async localSignup(createUserInput: CreateUserInput){

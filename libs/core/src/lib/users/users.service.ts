@@ -8,7 +8,7 @@ export class UsersService {
       id: 1,
       first_name: 'John',
       last_name: 'Doe',
-      email_address: 'testuser8@gmail.com',
+      email_address: 'testuser1@gmail.com',
       // password: 'more-secure'
       password: '$2b$10$cj.en4m0UFNuetd4OE6f5eJtarOx.s.ZkuzDV6BdZsTND1nkNpy/e'
     },
@@ -16,15 +16,15 @@ export class UsersService {
       id: 2,
       first_name: 'Mary',
       last_name: 'Poppins',
-      email_address: 'testuser1@gmail.com',
+      email_address: 'testuser2@gmail.com',
       // password: 'more-secure'
       password: '$2b$10$13DirdZlA3LF8XN4GkD/N.XClqu.EpLpidedIUAk/Ql7ge5VFd0hq'
     },
     {
       id: 3,
       first_name: 'Test',
-      last_name: 'Receive',
-      email_address: 'testreceive1@gmail.com',
+      last_name: 'User3',
+      email_address: 'testuser3@gmail.com',
       // password: 'more-secure'
       password: '$2b$10$13DirdZlA3LF8XN4GkD/N.XClqu.EpLpidedIUAk/Ql7ge5VFd0hq'
     }
@@ -46,8 +46,11 @@ export class UsersService {
   }
 
   findOne(email_address: string) {
-    console.log("Inside user service findOne");
-    console.log(this.users.find((user) => user.email_address === email_address));
+    console.log("[USER SERVICE - FIND ONE]");
+    let user = this.users.find((user) => user.email_address === email_address);
+    // if(!user){
+    //   throw new Error('User does not exist in the system!');
+    // }
     return this.users.find((user) => user.email_address === email_address);
   }
 

@@ -1,9 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import styles from './app.module.scss';
 import { useContext, useEffect, useState } from 'react';
+import fetch from 'cross-fetch';
 import { Route, Routes, Link, NavLink } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { ApolloClient, InMemoryCache, ApolloProvider, gql, useLazyQuery } from '@apollo/client';
+import { ApolloClient, ApolloLink, HttpLink, InMemoryCache, ApolloProvider, gql, useLazyQuery } from '@apollo/client';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -21,11 +22,46 @@ import ToyDetail from './components/Toy/ToyDetail';
 import { GET_UNREAD_BY_RECEPIENT } from './graphql/graphql';
 import Messenger from './components/Messaging/Messenger';
 
+import { BatchHttpLink } from '@apollo/client/link/batch-http';
+import { onError } from '@apollo/client/link/error';
+import { RetryLink } from '@apollo/client/link/retry';
+
+import { setContext } from '@apollo/client/link/context';
+
 const client = new ApolloClient({
-  uri: 'http://localhost:3000/graphql',
+  link: new HttpLink({ uri: 'http://localhost:3000/graphql', fetch }),
+  //uri: 'http://localhost:3000/graphql',
   //uri: process.env['REACT_APP_GRAPHQL_API_URL'],
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache()
 });
+
+// const client = new ApolloClient({
+//   link: ApolloLink.from([
+//     onError(({ graphQLErrors, networkError }) => {
+//       if (graphQLErrors) {
+//         graphQLErrors.forEach(({ message, locations, path }) =>
+//           console.log(
+//             `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+//           )
+//         );
+//       }
+//       if (networkError) {
+//         // localStorage.removeItem('token');
+//         console.error(`[Network error]:`, networkError);
+//       }
+//     }),
+//     new RetryLink(),
+//     new BatchHttpLink({
+//       uri: 'http://localhost:3000/graphql',
+//       batchMax: 2,
+//       batchInterval: 20,
+//     }),
+//   ]),
+//   cache: new InMemoryCache(),
+//   connectToDevTools: false,
+// });
+
+
 
 const initializeSignIn = () => {
  let jsonValue =  window.localStorage.getItem("USER");
@@ -41,29 +77,6 @@ const darkTheme = createTheme({
     palette: {
       mode: 'light'
     }});
-//     background: {
-//       default: '#FFFFF0' //ivory,
-//       //paper: '#b6c48e'
-//     },
-//     text: {
-//       primary: '#82716e'
-//     },
-//     primary:{
-//       main: '#abd699'
-//     }
-//   }
-  // palette: {
-  //   background: {
-  //     default: '#fceed1'
-  //   },
-  //   primary: {
-  //     main: '#ebf6f5'
-  //   },
-  //   text: {
-  //     primary: "#0000"
-  //   }
-  // }
-// });
 
 export function App() {
  // const theme = createTheme();
