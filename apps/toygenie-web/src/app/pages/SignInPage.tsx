@@ -14,7 +14,6 @@ import IUser from '../interfaces/IUser';
 import LoginContext from '../context/LoginContext';
 import { useLoginMutation, AuthEnum } from '@toygenie/graphql-access';
 import logo from '../../assets/ToyGenie.png';
-import { LoginWithGoogle } from '../components/GoogleLogin/LoginWithGoogle';
 import { LocalLogin } from '../components/LocalLogin/LocalLogin';
 import { Container } from '@mui/material';
 

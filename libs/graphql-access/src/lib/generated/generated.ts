@@ -114,7 +114,7 @@ export type Mutation = {
   removeMessaging: Messaging;
   removeToy: Toy;
   updateConversation: Conversation;
-  updateToy: Toy;
+  updateSaleStatus: Toy;
 };
 
 
@@ -153,7 +153,8 @@ export type MutationUpdateConversationArgs = {
 };
 
 
-export type MutationUpdateToyArgs = {
+export type MutationUpdateSaleStatusArgs = {
+  id: Scalars['Float'];
   updateToyInput: UpdateToyInput;
 };
 
@@ -258,14 +259,14 @@ export type UpdateConversationInput = {
 };
 
 export type UpdateToyInput = {
-  author: Scalars['Float'];
-  category: Scalars['String'];
-  condition: ConditionEnum;
-  description: Scalars['String'];
+  author?: InputMaybe<Scalars['Float']>;
+  category?: InputMaybe<Scalars['String']>;
+  condition?: InputMaybe<ConditionEnum>;
+  description?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
-  listPrice: Scalars['Float'];
+  listPrice?: InputMaybe<Scalars['Float']>;
   saleStatus: ToyStatusEnum;
-  title: Scalars['String'];
+  title?: InputMaybe<Scalars['String']>;
 };
 
 /** user  */
