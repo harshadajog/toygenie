@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start:api": "node dist/apps/api/main.js",
+    "heroku-postbuild": "nx build api --prod",
+    "start": "node dist/apps/api/main.js",
     "test": "nx test",
     "generate": "graphql-codegen",
     "build:api": "nx build api --prod",
