@@ -3,11 +3,10 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "nx serve",
-    "build": "nx build",
+    "start:api": "node dist/apps/api/main.js",
     "test": "nx test",
     "generate": "graphql-codegen",
-    "build:toygenie-api": "nx build toygenie-api --outputPath=apps/toygenie-api/dist",
+    "build:api": "nx build api --prod",
     "build:toygenie-web": "nx build toygenie-web --outputPath=apps/toygenie-web/dist"
   },
   "private": true,
