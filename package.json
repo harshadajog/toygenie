@@ -6,7 +6,9 @@
     "start": "nx serve",
     "build": "nx build",
     "test": "nx test",
-    "generate": "graphql-codegen"
+    "generate": "graphql-codegen",
+    "build:toygenie-api": "yarn --prefix api run build",
+    "build:toygenie-web": "yarn --prefix toygenie-web run build"
   },
   "private": true,
   "dependencies": {

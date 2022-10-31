@@ -14,9 +14,6 @@ import IUser from '../interfaces/IUser';
 import LoginContext from '../context/LoginContext';
 import { useLoginMutation, AuthEnum } from '@toygenie/graphql-access';
 import logo from '../../assets/ToyGenie.png';
-import { LoginWithGoogle } from '../components/GoogleLogin/LoginWithGoogle';
-
-
 export default function SignInO() {
   const loginContext = useContext(LoginContext);
   const [email_address, setEmailAddress] = useState('');
@@ -109,7 +106,7 @@ export default function SignInO() {
               Sign in
             </Typography>
             <Box sx={{ mt: 1 }}>
-            <LoginWithGoogle />
+          
             </Box>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <TextField
