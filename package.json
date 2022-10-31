@@ -7,8 +7,8 @@
     "build": "nx build",
     "test": "nx test",
     "generate": "graphql-codegen",
-    "build:toygenie-api": "yarn --prefix api run build",
-    "build:toygenie-web": "yarn --prefix toygenie-web run build"
+    "build:toygenie-api": "nx build toygenie-api --outputPath=apps/toygenie-api/dist",
+    "build:toygenie-web": "nx build toygenie-web --outputPath=apps/toygenie-web/dist"
   },
   "private": true,
   "dependencies": {
